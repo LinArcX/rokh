@@ -1,12 +1,9 @@
 #include "app.h"
-#include "lblAdd.h"
-#include "btnAdd.h"
-#include "txtInputTest.h"
-#include "../lib/util.h"
+#include "util.h"
 
+#include <stdlib.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
-#include <stdlib.h>
 
 App* app;
 
@@ -116,14 +113,7 @@ int initSDL()
   return EXIT_SUCCESS;
 }
 
-void initWidgets()
-{
-  initLblAdd();
-  initBtnAdd();
-  TxtInputTestInit();
-}
-
-int initialize()
+int initialize(void (*initWidget)())
 {
   initApp();
 
@@ -132,7 +122,8 @@ int initialize()
     return EXIT_FAILURE;
   }
 
-  initWidgets();
+  initWidget();
+
   return EXIT_SUCCESS;
 }
 

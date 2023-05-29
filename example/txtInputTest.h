@@ -5,5 +5,5 @@
 
 extern TextInput txtInputTest;
 
-void TxtInputTestInit();
+void txtInputTestInit();
 #endif

@@ -57,7 +57,7 @@ typedef struct SDLApp
 
 extern App* app;
 
-int initialize();
+int initialize(void (*initWidgets)());
 void render();
 void cleanup();
 

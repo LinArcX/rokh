@@ -1,8 +1,10 @@
-#include "app.h"
-#include "btnAdd.h"
 #include "txtInputTest.h"
-#include <string.h>
+
+#include "../lib/app.h"
 #include "../lib/util.h"
+
+#include "btnTest.h"
+#include <string.h>
 
 TextInput txtInputTest;
 
@@ -52,7 +54,7 @@ void txtInputTestCreateTestWidget()
 //------------- Setup/Initialization -------------//
 void txtInputTestInitProperties()
 {
-  txtInputTest.x = btnAdd.x + btnAdd.width + btnAdd.padding + 10;
+  txtInputTest.x = btnTest.x + btnTest.width + btnTest.padding + 10;
   txtInputTest.y = 20;
   txtInputTest.radius = 1;
   txtInputTest.padding = 2;
@@ -83,7 +85,7 @@ void txtInputTestSetupCallbackFunctions()
   registerCallBackFunction(&app->widgetCreatorHandler, txtInputTestCreateTestWidget);
 }
 
-void TxtInputTestInit()
+void txtInputTestInit()
 {
   txtInputTestInitProperties();
   txtInputTestSetupCallbackFunctions();
