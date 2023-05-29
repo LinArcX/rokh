@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="assets/cave.jpg" align="center" width="500" height="250"/>
+    <img src="assets/cave.jpg" align="center" width="700" height="350"/>
     <br/>
     <h4 align="center">Is it hard to make your own GUI? why nobody talks about it anymore?! <a href="https://en.wikipedia.org/wiki/Allegory_of_the_cave">[more]</a></h4>
 </h1>
