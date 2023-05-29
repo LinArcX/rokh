@@ -44,8 +44,14 @@ There are two main directories:
   And some other files like: btnAdd.c, txtInputTest.c
     - When you want to create some widgets, you should create a new file for it and put all the logic in it(like initialization, event handling, etc..)
 
-# How use it in my own project?
-Just put lib/ directory in your project. then you can grab ideas about how use them in example/txtInputTest.c and for setting up high level stuff you can grab ideas from main.c and app.c.
+# How use derafsh in my own project?
+1. put **lib/** directory in your project.
+2. start designing your scene by creating different widgets. you should follow some rules:
+  2.1. for every widget that you create, you should provide an init() function for it in it's header file.(look at `txtInputTest.h`)
+  2.2. in equivalent `.c` file, you should implement that init function.
+    2.2.1. inside this function, you should set properties of each widget.(most derafsh widgets have a structure that you need to initialize)
+    2.2.2. you should register callback functions to handle events.(look at `txtInputTest.c`, if you need some ideas)
+3. finally, call your init function in `initWidgets()` that you can find it in **main.c**.
 
 ## License
 ![License](https://img.shields.io/github/license/LinArcX/derafsh.svg)
