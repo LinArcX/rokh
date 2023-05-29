@@ -41,17 +41,3 @@ int createLable(SDL_Renderer* renderer, TTF_Font* font, Label label) {
   SDL_DestroyTexture(texture);
   return EXIT_SUCCESS;
 }
-
-//// Render rounded corners
-//SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 0); // Set color to transparent
-//SDL_SetRenderDrawBlendMode(app->renderer, SDL_BLENDMODE_BLEND);
-//SDL_Rect corners[4] = {
-//  { label.x, label.y, label.radius, label.radius },
-//  { label.x + label.width - label.radius, label.y, label.radius, label.radius },
-//  { label.x, label.y + label.height - label.radius, label.radius, label.radius },
-//  { label.x + label.width - label.radius, label.y + label.height - label.radius, label.radius, label.radius }
-  //};
-  //for (int i = 0; i < 4; i++)
-  //{
-  //  SDL_RenderFillRect(app->renderer, &corners[i]);
-  //}

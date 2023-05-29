@@ -6,10 +6,10 @@ Label lblAdd;
 
 void lblAddLeftClickDownHandler()
 {
-  if (app->mouse_x >= lblAdd.x
-      && app->mouse_x <= lblAdd.x + lblAdd.width + lblAdd.padding
-      && app->mouse_y >= lblAdd.y
-      && app->mouse_y <= lblAdd.y + lblAdd.height + lblAdd.padding)
+  if (app->lastCycleMouseButtonEvent.x >= lblAdd.x
+      && app->lastCycleMouseButtonEvent.x <= lblAdd.x + lblAdd.width + lblAdd.padding
+      && app->lastCycleMouseButtonEvent.y >= lblAdd.y
+      && app->lastCycleMouseButtonEvent.y <= lblAdd.y + lblAdd.height + lblAdd.padding)
   {
     SDL_Log("[lblAdd] leftButton Clicked!");
   }
@@ -17,10 +17,10 @@ void lblAddLeftClickDownHandler()
 
 void lblAddRightClickDownHandler()
 {
-  if (app->mouse_x >= lblAdd.x
-      && app->mouse_x <= lblAdd.x + lblAdd.width + lblAdd.padding
-      && app->mouse_y >= lblAdd.y
-      && app->mouse_y <= lblAdd.y + lblAdd.height + lblAdd.padding)
+  if (app->lastCycleMouseButtonEvent.x >= lblAdd.x
+      && app->lastCycleMouseButtonEvent.x <= lblAdd.x + lblAdd.width + lblAdd.padding
+      && app->lastCycleMouseButtonEvent.y >= lblAdd.y
+      && app->lastCycleMouseButtonEvent.y <= lblAdd.y + lblAdd.height + lblAdd.padding)
   {
     SDL_Log("[lblAdd] rightButton Clicked!");
   }

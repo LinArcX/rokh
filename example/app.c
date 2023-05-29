@@ -10,7 +10,8 @@
 
 App* app;
 
-void windowPositionChangeHandler(){
+void windowPositionChangeHandler()
+{
   app->x = app->lastCycleWindowEvent.data1;
   app->y = app->lastCycleWindowEvent.data2;
 
@@ -32,36 +33,38 @@ void initApp()
 
   app->window = NULL;
   app->renderer = NULL;
-  memset(&app->lastCycleEvent, 0, sizeof(SDL_Event));
 
   app->font = NULL;
-  app->fontName = "monaco.ttf"; //CourierPrime.ttf, FantasqueSansMono.ttf
   app->fontSize = 14;
+  app->fontName = "monaco.ttf"; //CourierPrime.ttf, FantasqueSansMono.ttf
 
   app->x = 0;
   app->y = 0;
-  app->mouse_x = 0;
-  app->mouse_y = 0;
-  app->isRunnig = true;
   app->width = 800;
   app->height = 600;
   app->backgroundColor = "#757575";// #262626
 
+  app->isRunnig = true;
+  app->renderLoopDelay = 40;
+
   app->hoverHandler = NULL;
+  app->selectionHandler = NULL;
+
+  app->textInputHandler = NULL;
+
+  app->keyboardHandler = NULL;
+  app->backSpaceHandler = NULL;
 
   app->leftClickUpHandler = NULL;
   app->leftClickDownHandler = NULL;
   app->rightClickUpHandler = NULL;
   app->rightClickDownHandler = NULL;
 
-  app->keyboardHandler = NULL;
-  app->textInputHandler = NULL;
-
   app->widgetCreatorHandler = NULL;
   app->widgetPositionChangedHandler = NULL;
 
-  registerCallBackFunction(&app->widgetPositionChangedHandler, windowPositionChangeHandler);
   registerCallBackFunction(&app->keyboardHandler, windowKeyboardHandler);
+  registerCallBackFunction(&app->widgetPositionChangedHandler, windowPositionChangeHandler);
 }
 
 int initFont()
@@ -113,6 +116,13 @@ int initSDL()
   return EXIT_SUCCESS;
 }
 
+void initWidgets()
+{
+  initLblAdd();
+  initBtnAdd();
+  TxtInputTestInit();
+}
+
 int initialize()
 {
   initApp();
@@ -122,11 +132,7 @@ int initialize()
     return EXIT_FAILURE;
   }
 
-  // init your widgets here
-  initLblAdd();
-  initBtnAdd();
-  initTxtInputTest();
-
+  initWidgets();
   return EXIT_SUCCESS;
 }
 
@@ -220,8 +226,7 @@ void render()
     callFunctions(app->widgetCreatorHandler);
 
     SDL_RenderPresent(app->renderer);
-    // we need this delay, unless we'll face a high cpu usage. a number between 60 and 100 is ok.
-    SDL_Delay(60);
+    SDL_Delay(app->renderLoopDelay);
   }
 }
 

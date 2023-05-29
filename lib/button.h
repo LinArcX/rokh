@@ -31,17 +31,5 @@ typedef struct SDLButton
   uint8_t borderDefaultHeight;
 } Button;
 
-int createButton(SDL_Renderer* renderer, TTF_Font* font, Button button);
-
-// handlers
-//void (*onHoverHandler)(void);
-//void (*onXChangeHandler)(int16_t);
-//void (*onYChangeHandler)(int16_t);
-//void (*onWidthChangeHandler)(uint16_t);
-//void (*onHeightChangeHandler)(uint16_t);
-
-//Node nodes[2];
-//int selectedNode = -1;  // -1 indicates no node is currently selected
-//void generateNodes();
-
+int ButtonCreate(SDL_Renderer* renderer, TTF_Font* font, Button button);
 #endif

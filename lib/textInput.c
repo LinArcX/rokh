@@ -1,22 +1,47 @@
 #include <stddef.h>
-
 #include "textInput.h"
 
 SDL_Color textInputBorderColor = {0};
+//------------- Region detection -------------//
+bool textInputIsInside_MouseButtonEvent(TextInput txtInput, SDL_MouseButtonEvent event)
+{
+  if (event.x >= txtInput.x
+      && event.x <= txtInput.x + txtInput.width + txtInput.padding
+      && event.y >= txtInput.y
+      && event.y <= txtInput.y + txtInput.height + txtInput.padding)
+  {
+    return true;
+  }
+  return false;
+}
 
+bool textInputIsInside_MouseMotionEvent(TextInput txtInput, SDL_MouseMotionEvent event)
+{
+  if (event.x >= txtInput.x
+      && event.x <= txtInput.x + txtInput.width + txtInput.padding
+      && event.y >= txtInput.y
+      && event.y <= txtInput.y + txtInput.height + txtInput.padding)
+  {
+    return true;
+  }
+  return false;
+}
+//------------- Borders -------------//
 void textInputCreateLeftBorder(SDL_Renderer* renderer, const TextInput* textInput)
 {
   SDL_Rect rect = {0};
-  if(textInput->borderStyle == ALL)
-  { rect.x = textInput->x - textInput->borderDefaultWidth; rect.y = textInput->y - textInput->borderDefaultHeight;
-   rect.w = textInput->borderDefaultWidth;
-   rect.h = textInput->height + textInput->padding + (2 * textInput->borderDefaultHeight);
+  if(textInput->border.style == ALL)
+  {
+    rect.x = textInput->x - textInput->border.width;
+    rect.y = textInput->y - textInput->border.height;
+    rect.w = textInput->border.width;
+    rect.h = textInput->height + textInput->padding + (2 * textInput->border.height);
   }
   else
   {
-   rect.x = textInput->x - textInput->borderDefaultWidth;
+   rect.x = textInput->x - textInput->border.width;
    rect.y = textInput->y;
-   rect.w = textInput->borderDefaultWidth;
+   rect.w = textInput->border.width;
    rect.h = textInput->height + textInput->padding;
   }
   SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
@@ -26,18 +51,18 @@ void textInputCreateLeftBorder(SDL_Renderer* renderer, const TextInput* textInpu
 void textInputCreateRightBorder(SDL_Renderer* renderer, const TextInput* textInput)
 {
   SDL_Rect rect = {0};
-  if(textInput->borderStyle == ALL)
+  if(textInput->border.style == ALL)
   {
     rect.x = textInput->x + textInput->width + textInput->padding;
-    rect.y = textInput->y - textInput->borderDefaultHeight;
-    rect.w = textInput->borderDefaultWidth;
-    rect.h = textInput->height + textInput->padding + (2 * textInput->borderDefaultHeight);
+    rect.y = textInput->y - textInput->border.height;
+    rect.w = textInput->border.width;
+    rect.h = textInput->height + textInput->padding + (2 * textInput->border.height);
   }
   else
   {
     rect.x = textInput->x + textInput->width + textInput->padding;
     rect.y = textInput->y;
-    rect.w = textInput->borderDefaultWidth;
+    rect.w = textInput->border.width;
     rect.h = textInput->height + textInput->padding;
   }
   SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
@@ -48,9 +73,9 @@ void textInputCreateTopBorder(SDL_Renderer* renderer, const TextInput* textInput
 {
   SDL_Rect rect = {
     textInput->x,
-    textInput->y - textInput->borderDefaultHeight,
+    textInput->y - textInput->border.height,
     textInput->width + textInput->padding,
-    textInput->borderDefaultHeight
+    textInput->border.height
   };
   SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
   SDL_RenderFillRect(renderer, &rect);
@@ -62,7 +87,7 @@ void textInputCreateBottomBorder(SDL_Renderer* renderer, const TextInput* textIn
     textInput->x ,
     textInput->y + textInput->height + textInput->padding,
     textInput->width + textInput->padding,
-    textInput->borderDefaultHeight
+    textInput->border.height
   };
   SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
   SDL_RenderFillRect(renderer, &rect);
@@ -86,21 +111,21 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   hexToRGBA(textInput.backgroundColor, &red, &green, &blue, &alpha);
   SDL_Color backgroundColor = { red, green, blue, alpha };
 
-  hexToRGBA(textInput.borderColor, &red, &green, &blue, &alpha);
+  hexToRGBA(textInput.border.color, &red, &green, &blue, &alpha);
   textInputBorderColor.r = red;
   textInputBorderColor.g = green;
   textInputBorderColor.b = blue;
   textInputBorderColor.a = alpha;
 
-  if (textInput.isHovered)
+  if (textInput.hover.isHovered)
   {
-    hexToRGBA(textInput.hoverTextColor, &red, &green, &blue, &alpha);
+    hexToRGBA(textInput.hover.textColor, &red, &green, &blue, &alpha);
     textColor.r = red;
     textColor.g = green;
     textColor.b = blue;
     textColor.a = alpha;
 
-    hexToRGBA(textInput.hoverBackgroundColor, &red, &green, &blue, &alpha);
+    hexToRGBA(textInput.hover.backgroundColor, &red, &green, &blue, &alpha);
     backgroundColor.r = red;
     backgroundColor.g = green;
     backgroundColor.b = blue;
@@ -111,8 +136,7 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   if (!strlen(textInput.text))
   {
     // Optionally, you can create a blank surface with a default size
-    //Uint32 format = SDL_PIXELFORMAT_RGBA8888;
-    Uint32 format = SDL_PIXELFORMAT_RGBA32;
+    Uint32 format = SDL_PIXELFORMAT_RGBA32;// SDL_PIXELFORMAT_RGBA8888
     surface = SDL_CreateRGBSurface(format, 1, 1, 1, 0, 0, 0, 0);
     if (!surface)
     {
@@ -120,7 +144,6 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
       SDL_FreeSurface(surface);
       return EXIT_FAILURE;
     }
-    // Set the surface's alpha channel (transparency)
     SDL_SetSurfaceAlphaMod(surface, SDL_ALPHA_TRANSPARENT);
   }
   else
@@ -147,7 +170,12 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
   SDL_RenderFillRect(renderer, &backgroundRect);
 
-  switch(textInput.borderStyle)
+  // text rectangle
+  SDL_Rect textRect = { textInput.x + textInput.padding / 2, textInput.y + textInput.padding / 2, surface->w, surface->h};//textInput.width, textInput.height };
+  SDL_RenderCopy(renderer, texture, NULL, &textRect);
+
+  // create border
+  switch(textInput.border.style)
   {
     case LEFT:
       textInputCreateLeftBorder(renderer, &textInput);
@@ -168,11 +196,6 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
       SDL_Log("ERROR -> unknown border style");
       break;
   }
-
-  // Create a destination rectangle for rendering the texture
-  SDL_Rect textRect = { textInput.x + textInput.padding / 2, textInput.y + textInput.padding / 2, surface->w, surface->h};//textInput.width, textInput.height };
-  // Render the texture on the screen
-  SDL_RenderCopy(renderer, texture, NULL, &textRect);
 
   SDL_FreeSurface(surface);
   SDL_DestroyTexture(texture);

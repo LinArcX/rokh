@@ -5,12 +5,13 @@
 
 Button btnAdd;
 
+//------------- Event Handlers -------------//
 void btnAddLeftClickHandler()
 {
-  if (app->mouse_x >= btnAdd.x
-      && app->mouse_x <= btnAdd.x + btnAdd.width + btnAdd.padding
-      && app->mouse_y >= btnAdd.y
-      && app->mouse_y <= btnAdd.y + btnAdd.height + btnAdd.padding)
+  if (app->lastCycleMouseButtonEvent.x >= btnAdd.x
+      && app->lastCycleMouseButtonEvent.x <= btnAdd.x + btnAdd.width + btnAdd.padding
+      && app->lastCycleMouseButtonEvent.y >= btnAdd.y
+      && app->lastCycleMouseButtonEvent.y <= btnAdd.y + btnAdd.height + btnAdd.padding)
   {
     SDL_Log("[btnAdd] leftButton Clicked!");
   }
@@ -18,10 +19,10 @@ void btnAddLeftClickHandler()
 
 void btnAddRightClickHandler()
 {
-  if (app->mouse_x >= btnAdd.x
-      && app->mouse_x <= btnAdd.x + btnAdd.width + btnAdd.padding
-      && app->mouse_y >= btnAdd.y
-      && app->mouse_y <= btnAdd.y + btnAdd.height + btnAdd.padding)
+  if (app->lastCycleMouseButtonEvent.x >= btnAdd.x
+      && app->lastCycleMouseButtonEvent.x <= btnAdd.x + btnAdd.width + btnAdd.padding
+      && app->lastCycleMouseButtonEvent.y >= btnAdd.y
+      && app->lastCycleMouseButtonEvent.y <= btnAdd.y + btnAdd.height + btnAdd.padding)
   {
     SDL_Log("[btnAdd] rightButton Clicked!");
   }
@@ -29,10 +30,10 @@ void btnAddRightClickHandler()
 
 void btnAddHoverHandler()
 {
-  if (app->mouse_x >= btnAdd.x
-      && app->mouse_x <= btnAdd.x + btnAdd.width + btnAdd.padding
-      && app->mouse_y >= btnAdd.y
-      && app->mouse_y <= btnAdd.y + btnAdd.height + btnAdd.padding)
+  if (app->lastCycleMouseMotionEvent.x >= btnAdd.x
+      && app->lastCycleMouseMotionEvent.x <= btnAdd.x + btnAdd.width + btnAdd.padding
+      && app->lastCycleMouseMotionEvent.y >= btnAdd.y
+      && app->lastCycleMouseMotionEvent.y <= btnAdd.y + btnAdd.height + btnAdd.padding)
   {
     btnAdd.isHovered = true;
     return;
@@ -40,20 +41,23 @@ void btnAddHoverHandler()
   btnAdd.isHovered = false;
 }
 
+//------------- Widget Creation -------------//
 void createBtnAddWidget()
 {
-  createButton(app->renderer, app->font, btnAdd);
+  ButtonCreate(app->renderer, app->font, btnAdd);
 }
 
-void initBtnAdd()
+//------------- Setup/Initialization -------------//
+void setupCallbackFunctions()
 {
-  // setup callback functions
   registerCallBackFunction(&app->leftClickDownHandler, btnAddLeftClickHandler);
   registerCallBackFunction(&app->rightClickDownHandler, btnAddRightClickHandler);
   registerCallBackFunction(&app->hoverHandler, btnAddHoverHandler);
   registerCallBackFunction(&app->widgetCreatorHandler, createBtnAddWidget);
+}
 
-  // initialize
+void initProperties()
+{
   btnAdd.x = lblAdd.x + lblAdd.width;
   btnAdd.y = lblAdd.y;
   btnAdd.radius = 50;
@@ -74,4 +78,10 @@ void initBtnAdd()
   btnAdd.borderStyle = ALL;
   btnAdd.borderDefaultWidth = 2;
   btnAdd.borderDefaultHeight = 2;
+}
+
+void initBtnAdd()
+{
+  setupCallbackFunctions();
+  initProperties();
 }

@@ -13,6 +13,35 @@ typedef struct SDLApp
   SDL_Window* window;
   SDL_Renderer* renderer;
 
+  TTF_Font* font;
+  uint8_t fontSize;
+  const char* fontName;
+
+  int16_t x;
+  int16_t y;
+  uint16_t width;
+  uint16_t height;
+  const char* backgroundColor;
+
+  bool isRunnig;
+  uint16_t renderLoopDelay; // we need this delay, unless we'll face a high cpu usage. a number between 40 and 80 is ok.
+
+  Node* hoverHandler;
+  Node* selectionHandler;
+
+  Node* textInputHandler;
+
+  Node* keyboardHandler;
+  Node* backSpaceHandler;
+
+  Node* leftClickDownHandler;
+  Node* leftClickUpHandler;
+  Node* rightClickDownHandler;
+  Node* rightClickUpHandler;
+
+  Node* widgetCreatorHandler;
+  Node* widgetPositionChangedHandler;
+
   SDL_Event            lastCycleEvent;
   SDL_WindowEvent      lastCycleWindowEvent;
 
@@ -24,36 +53,6 @@ typedef struct SDLApp
 
   SDL_TextInputEvent   lastCycleTextInputEvent;
   SDL_TextEditingEvent lastCycleTextEditingEvent;
-
-  TTF_Font* font;
-  const char* fontName;
-  uint8_t fontSize;
-
-  int16_t x;
-  int16_t y;
-  uint16_t width;
-  uint16_t height;
-
-  int mouse_x;
-  int mouse_y;
-
-  bool isRunnig;
-
-  const char* backgroundColor;
-
-  Node* hoverHandler;
-
-  Node* leftClickDownHandler;
-  Node* leftClickUpHandler;
-  Node* rightClickDownHandler;
-  Node* rightClickUpHandler;
-
-  Node* keyboardHandler;
-  Node* backSpaceHandler;
-  Node* textInputHandler;
-
-  Node* widgetCreatorHandler;
-  Node* widgetPositionChangedHandler;
 }App;
 
 extern App* app;
