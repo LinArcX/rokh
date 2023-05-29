@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ###########################################################################################
-#                                    Derafsh
+#                                    Cave
 ###########################################################################################
 # there's a project.sh in root of the project. before do anything, source it: . project.sh
 #
@@ -34,17 +34,17 @@ build_dir="build/$mode"
 
 mode_flags=""
 if [ "$mode" == "debug" ]; then
-  app="derafsh"
+  app="cave"
   mode_flags="-g -O0"
 fi
 
 if [ "$mode" == "release" ]; then
-  app="derafsh"
+  app="cave"
   mode_flags="-O3"
 fi
 
 if [ "$mode" == "test" ]; then
-  app="derafsh_test"
+  app="cave_test"
 fi
 
 _createBuildDir() {
@@ -104,7 +104,7 @@ _findSymbolsInObj() {
 }
 
 p() {
-  commands=("build" "run" "clean" "debug" "generate tags" "valgrind" "find strings in the binary" "list symbols from object files")
+  commands=("build" "run" "clean" "debug" "search" "search/replace" "generate tags" "valgrind" "find strings in the binary" "list symbols from object files")
   selected=$(printf '%s\n' "${commands[@]}" | fzf --header="project:")
 
   case $selected in
@@ -116,6 +116,12 @@ p() {
       _run;;
     "clean")
       _clean;;
+    "search")
+      read -p "keyword: " p_keyword; rg "$p_keyword" ;;
+    "search/replace")
+      read -p "to_search: " to_search
+      read -p "to_replace: " to_replace
+      ambr "$to_search" "$to_replace" ;;
     "generate tags")
       _generateTags;;
     "valgrind")
