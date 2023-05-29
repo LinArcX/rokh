@@ -8,25 +8,33 @@ TextInput txtInputTest;
 
 void txtInputTestTextInputHandler()
 {
-  //SDL_Log("before reallocation");
-
-  txtInputTest.text = (char*)realloc(txtInputTest.text, strlen(txtInputTest.text) + 1);
-  if (NULL == txtInputTest.text)
+  if (app->lastCycleMouseButtonEvent.x >= txtInputTest.x
+      && app->lastCycleMouseButtonEvent.x <= txtInputTest.x + txtInputTest.width + txtInputTest.padding
+      && app->lastCycleMouseButtonEvent.y >= txtInputTest.y
+      && app->lastCycleMouseButtonEvent.y <= txtInputTest.y + txtInputTest.height + txtInputTest.padding)
   {
-    SDL_Log("Failed to reallocate memory\n");
+    txtInputTest.newChar = *app->lastCycleTextInputEvent.text;
+    txtInputTest.text = (char*)realloc(txtInputTest.text, strlen(txtInputTest.text) + 1);
+    if (NULL == txtInputTest.text)
+    {
+      SDL_Log("Failed to reallocate memory\n");
+    }
+    txtInputTest.text[strlen(txtInputTest.text)] = txtInputTest.newChar;
+    //txtInputTest.text[strlen(txtInputTest.text) + 1] = '\0';
   }
-  //SDL_Log("txtInputTest.newChar: %c", txtInputTest.newChar);
-  //SDL_Log("txtInputTest.text: %s", txtInputTest.text);
-
-  txtInputTest.text[strlen(txtInputTest.text)] = txtInputTest.newChar;
-  //txtInputTest.text[strlen(txtInputTest.text) + 1] = '\0';
 }
 
 void txtInputTestBackSpaceHandler()
 {
-  if(strlen(txtInputTest.text) > 0)
+  if (app->lastCycleMouseButtonEvent.x >= txtInputTest.x
+      && app->lastCycleMouseButtonEvent.x <= txtInputTest.x + txtInputTest.width + txtInputTest.padding
+      && app->lastCycleMouseButtonEvent.y >= txtInputTest.y
+      && app->lastCycleMouseButtonEvent.y <= txtInputTest.y + txtInputTest.height + txtInputTest.padding)
   {
-    txtInputTest.text[strlen(txtInputTest.text) - 1] = '\0';
+    if(strlen(txtInputTest.text) > 0)
+    {
+      txtInputTest.text[strlen(txtInputTest.text) - 1] = '\0';
+    }
   }
 }
 
@@ -44,12 +52,12 @@ void initTxtInputTest()
   txtInputTest.width = 200;
   txtInputTest.height = 20;
   txtInputTest.padding = 2;
-  txtInputTest.backgroundColor = "#262626";
+  txtInputTest.backgroundColor = "#DADADA"; //#262626
 
   txtInputTest.text = malloc(1);
-  memset(txtInputTest.text, '\0', 1);
+  memset(txtInputTest.text, ' ', 1);
   //txtInputTest.text = " ";
-  txtInputTest.textColor = "#FAFAFA"; //#DADADA,
+  txtInputTest.textColor = "#212121"; //#DADADA, #FAFAFA
                                       //
   txtInputTest.isHovered = false;
   txtInputTest.hoverText = "";

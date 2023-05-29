@@ -2,6 +2,7 @@
 #define _APP_H
 
 #include <stdlib.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
@@ -11,6 +12,18 @@ typedef struct SDLApp
 {
   SDL_Window* window;
   SDL_Renderer* renderer;
+
+  SDL_Event            lastCycleEvent;
+  SDL_WindowEvent      lastCycleWindowEvent;
+
+  SDL_KeyboardEvent    lastCycleKeyboardEvent;
+  SDL_KeyboardEvent    lastCycleKeyboardBackSpaceEvent;
+
+  SDL_MouseButtonEvent lastCycleMouseButtonEvent;
+  SDL_MouseMotionEvent lastCycleMouseMotionEvent;
+
+  SDL_TextInputEvent   lastCycleTextInputEvent;
+  SDL_TextEditingEvent lastCycleTextEditingEvent;
 
   TTF_Font* font;
   const char* fontName;
@@ -24,6 +37,8 @@ typedef struct SDLApp
   int mouse_x;
   int mouse_y;
 
+  bool isRunnig;
+
   const char* backgroundColor;
 
   Node* hoverHandler;
@@ -33,6 +48,7 @@ typedef struct SDLApp
   Node* rightClickDownHandler;
   Node* rightClickUpHandler;
 
+  Node* keyboardHandler;
   Node* backSpaceHandler;
   Node* textInputHandler;
 

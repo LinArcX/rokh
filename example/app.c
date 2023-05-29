@@ -11,7 +11,18 @@
 App* app;
 
 void windowPositionChangeHandler(){
+  app->x = app->lastCycleWindowEvent.data1;
+  app->y = app->lastCycleWindowEvent.data2;
+
   SDL_Log("Window moved to (%d, %d)\n", app->x, app->y);
+}
+
+void windowKeyboardHandler()
+{
+  if (app->lastCycleKeyboardEvent.keysym.sym == SDLK_F4 && (app->lastCycleKeyboardEvent.keysym.mod & KMOD_ALT))
+  {
+    app->isRunnig = false;
+  }
 }
 
 //------------- Initialization -------------//
@@ -21,18 +32,20 @@ void initApp()
 
   app->window = NULL;
   app->renderer = NULL;
+  memset(&app->lastCycleEvent, 0, sizeof(SDL_Event));
 
   app->font = NULL;
-  app->fontName = "monaco.ttf"; //FantasqueSansMono
+  app->fontName = "monaco.ttf"; //CourierPrime.ttf, FantasqueSansMono.ttf
   app->fontSize = 14;
 
   app->x = 0;
   app->y = 0;
   app->mouse_x = 0;
   app->mouse_y = 0;
+  app->isRunnig = true;
   app->width = 800;
   app->height = 600;
-  app->backgroundColor = "#262626";// "#757575";
+  app->backgroundColor = "#757575";// #262626
 
   app->hoverHandler = NULL;
 
@@ -41,13 +54,14 @@ void initApp()
   app->rightClickUpHandler = NULL;
   app->rightClickDownHandler = NULL;
 
-  app->backSpaceHandler = NULL;
+  app->keyboardHandler = NULL;
   app->textInputHandler = NULL;
 
   app->widgetCreatorHandler = NULL;
   app->widgetPositionChangedHandler = NULL;
 
   registerCallBackFunction(&app->widgetPositionChangedHandler, windowPositionChangeHandler);
+  registerCallBackFunction(&app->keyboardHandler, windowKeyboardHandler);
 }
 
 int initFont()
@@ -119,10 +133,9 @@ int initialize()
 //------------- Rendering -------------//
 void render()
 {
-  int quit = 0;
   SDL_Event event;
 
-  while (!quit)
+  while (app->isRunnig)
   {
     while (SDL_PollEvent(&event))
     {
@@ -130,33 +143,33 @@ void render()
       {
         case SDL_QUIT:
           {
-            quit = 1;
+            app->isRunnig = false;
           } break;
+        case SDL_KEYUP:
+          break;
         case SDL_KEYDOWN:
           {
-            if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT))
-            {
-              quit = 1;
-            }
             if (event.key.keysym.sym == SDLK_BACKSPACE)
             {
-              int mouseX, mouseY;
-              SDL_GetMouseState(&app->mouse_x, &app->mouse_y);
+              //int mouseX, mouseY;
+              //SDL_GetMouseState(&app->mouse_x, &app->mouse_y);
+              app->lastCycleKeyboardBackSpaceEvent = event.key;
               callFunctions(app->backSpaceHandler);
+            }
+            else
+            {
+              app->lastCycleKeyboardEvent = event.key;
+              callFunctions(app->keyboardHandler);
             }
           } break;
         case SDL_TEXTINPUT:
           {
-            int mouseX, mouseY;
-            SDL_GetMouseState(&app->mouse_x, &app->mouse_y);
-            txtInputTest.newChar = *event.text.text;
+            app->lastCycleTextInputEvent = event.text;
             callFunctions(app->textInputHandler);
           } break;
         case SDL_MOUSEBUTTONDOWN:
           {
-            app->mouse_x = event.button.x;
-            app->mouse_y = event.button.y;
-
+            app->lastCycleMouseButtonEvent = event.button;
             if (event.button.button == SDL_BUTTON_LEFT)
             {
               callFunctions(app->leftClickDownHandler);
@@ -168,9 +181,7 @@ void render()
           } break;
         case SDL_MOUSEBUTTONUP:
           {
-            app->mouse_x = event.button.x;
-            app->mouse_y = event.button.y;
-
+            app->lastCycleMouseButtonEvent = event.button;
             if (event.button.button == SDL_BUTTON_LEFT)
             {
               callFunctions(app->leftClickUpHandler);
@@ -182,8 +193,7 @@ void render()
           } break;
         case SDL_MOUSEMOTION:
           {
-            app->mouse_x = event.motion.x;
-            app->mouse_y = event.motion.y;
+            app->lastCycleMouseMotionEvent = event.motion;
             callFunctions(app->hoverHandler);
           } break;
         case SDL_MOUSEWHEEL:
@@ -192,8 +202,7 @@ void render()
           {
             if (event.window.event == SDL_WINDOWEVENT_MOVED)
             {
-              app->x = event.window.data1;
-              app->y = event.window.data2;
+              app->lastCycleWindowEvent = event.window;
               callFunctions(app->widgetPositionChangedHandler);
             }
           } break;
@@ -233,7 +242,7 @@ void cleanup()
   freeCallBackFunctionList(app->rightClickDownHandler);
   freeCallBackFunctionList(app->rightClickUpHandler);
 
-  freeCallBackFunctionList(app->backSpaceHandler);
+  freeCallBackFunctionList(app->keyboardHandler);
   freeCallBackFunctionList(app->textInputHandler);
 
   freeCallBackFunctionList(app->widgetCreatorHandler);
@@ -242,12 +251,3 @@ void cleanup()
   free(app);
   app = NULL;
 }
-
-            //int len = strlen(txtInputTest.newText);
-            //txtInputTest.newText = (char*)realloc(txtInputTest.newText, len + 1);
-            //if (txtInputTest.newText == NULL) {
-            //  SDL_Log("Failed to reallocate memory\n");
-            //}
-
-            //txtInputTest.newText[len] = *event.text.text;
-            ////txtInputTest.newText[len + 1] = '\0';

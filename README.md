@@ -14,14 +14,18 @@ A gui library written in C and SDL2
 
 # Build/Run/Clean
 ## Linux
-First source `. project.sh`. And then call `p`(it's a bash function).
-Not you can see a list of commands, like:
-- run                                                                                                                                                                                                             │
-- clean                                                                                                                                                                                                           │
-- debug                                                                                                                                                                                                           │
-- generate tags                                                                                                                                                                                                   │
-- valgrind                                                                                                                                                                                                        │
-- find strings in the binary                                                                                                                                                                                      │
+First source **project.sh** file:
+`. project.sh`
+
+And then call `p`(it's a bash function).
+
+Now you can see a list of commands, like:
+- run
+- clean
+- debug
+- generate tags
+- valgrind
+- find strings in the binary
 - list symbols from object files
 
 # Architecture

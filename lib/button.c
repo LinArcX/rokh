@@ -155,7 +155,7 @@ int createButton(SDL_Renderer* renderer, TTF_Font* font, Button button) {
   }
 
   // Create a destination rectangle for rendering the texture
-  SDL_Rect textRect = { button.x + button.padding / 2, button.y + button.padding / 2, button.width, button.height };
+  SDL_Rect textRect = { button.x + button.padding / 2, button.y + button.padding / 2, surface->w, surface->h};//button.width, button.height };
   // Render the texture on the screen
   SDL_RenderCopy(renderer, texture, NULL, &textRect);
 

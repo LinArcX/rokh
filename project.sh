@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ###########################################################################################
-#                                    e4
+#                                    Derafsh
 ###########################################################################################
 # there's a project.sh in root of the project. before do anything, source it: . project.sh
 #
@@ -34,17 +34,17 @@ build_dir="build/$mode"
 
 mode_flags=""
 if [ "$mode" == "debug" ]; then
-  app="e4"
+  app="derafsh"
   mode_flags="-g -O0"
 fi
 
 if [ "$mode" == "release" ]; then
-  app="e4"
+  app="derafsh"
   mode_flags="-O3"
 fi
 
 if [ "$mode" == "test" ]; then
-  app="e4_test"
+  app="derafsh_test"
 fi
 
 _createBuildDir() {
@@ -70,8 +70,7 @@ _build() {
   _createBuildDir
   _generateTags
   _compile
-  cp assets/monaco.ttf $build_dir
-  #cp assets/FantasqueSansMono.ttf $build_dir
+  cp assets/*.ttf $build_dir
 }
 
 _debug() {

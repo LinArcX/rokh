@@ -8,9 +8,7 @@ void textInputCreateLeftBorder(SDL_Renderer* renderer, const TextInput* textInpu
 {
   SDL_Rect rect = {0};
   if(textInput->borderStyle == ALL)
-  {
-   rect.x = textInput->x - textInput->borderDefaultWidth;
-   rect.y = textInput->y - textInput->borderDefaultHeight;
+  { rect.x = textInput->x - textInput->borderDefaultWidth; rect.y = textInput->y - textInput->borderDefaultHeight;
    rect.w = textInput->borderDefaultWidth;
    rect.h = textInput->height + textInput->padding + (2 * textInput->borderDefaultHeight);
   }
@@ -78,7 +76,8 @@ void textInputCreateAllBorder(SDL_Renderer* renderer, const TextInput* textInput
   textInputCreateBottomBorder(renderer, textInput);
 }
 
-int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput) {
+int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
+{
   uint8_t red, green, blue, alpha;
 
   hexToRGBA(textInput.textColor, &red, &green, &blue, &alpha);
@@ -108,13 +107,31 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
     backgroundColor.a = alpha;
   }
 
-  // Create a surface from the rendered text
-  SDL_Surface* surface = TTF_RenderText_Solid(font, textInput.text, textColor);
-  if (!surface)
+  SDL_Surface* surface = NULL;
+  if (!strlen(textInput.text))
   {
-    SDL_Log("Failed to create surface: %s", TTF_GetError());
-    SDL_FreeSurface(surface);
-    return EXIT_FAILURE;
+    // Optionally, you can create a blank surface with a default size
+    //Uint32 format = SDL_PIXELFORMAT_RGBA8888;
+    Uint32 format = SDL_PIXELFORMAT_RGBA32;
+    surface = SDL_CreateRGBSurface(format, 1, 1, 1, 0, 0, 0, 0);
+    if (!surface)
+    {
+      SDL_Log("Failed to create surface(SDL_CreateRGBSurface): %s", SDL_GetError());
+      SDL_FreeSurface(surface);
+      return EXIT_FAILURE;
+    }
+    // Set the surface's alpha channel (transparency)
+    SDL_SetSurfaceAlphaMod(surface, SDL_ALPHA_TRANSPARENT);
+  }
+  else
+  {
+    surface = TTF_RenderText_Solid(font, textInput.text, textColor);
+    if (!surface)
+    {
+      SDL_Log("Failed to create surface(TTF_RenderText_Solid): %s", TTF_GetError());
+      SDL_FreeSurface(surface);
+      return EXIT_FAILURE;
+    }
   }
 
   SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);

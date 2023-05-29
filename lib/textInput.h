@@ -34,5 +34,4 @@ typedef struct SDLTextInput
 }TextInput;
 
 int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput);
-
 #endif
