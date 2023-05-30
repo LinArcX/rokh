@@ -70,7 +70,7 @@ They don't even bother themselves to search, explore or even try to make somethi
 
 I created the Cave:
 1. to satisfy my curiosity and make my knowledge deeper in GUI development.
-2. encouraging that you can start exploring too.
+2. to encourage you that can start exploring also.
 3. and maybe someone uses CaveGui in his/her own project. who knows? :)
 
 ## License

@@ -3,19 +3,44 @@
 
 SDL_Color textInputBorderColor = {0};
 //------------- Region detection -------------//
-bool textInputIsInside_MouseButtonEvent(TextInput txtInput, SDL_MouseButtonEvent event)
+bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEvent event)
 {
-  if (event.x >= txtInput.x
-      && event.x <= txtInput.x + txtInput.width + txtInput.padding
-      && event.y >= txtInput.y
-      && event.y <= txtInput.y + txtInput.height + txtInput.padding)
+  if (event.x >= txtInput->x
+      && event.x <= txtInput->x + txtInput->width + txtInput->padding
+      && event.y >= txtInput->y
+      && event.y <= txtInput->y + txtInput->height + txtInput->padding)
   {
+    SDL_Log("txtInput size append: %zu", strlen(txtInput->text));
+
+   if(strlen(txtInput->text) * 8 < txtInput->width)
+   {
+    txtInput->caretPostion += 8;
+   }
+
     return true;
   }
   return false;
 }
 
-bool textInputIsInside_MouseMotionEvent(TextInput txtInput, SDL_MouseMotionEvent event)
+bool caveTextInputIsInsideBackSpaceEvent(TextInput* txtInput, SDL_MouseButtonEvent event)
+{
+  if (event.x >= txtInput->x
+      && event.x <= txtInput->x + txtInput->width + txtInput->padding
+      && event.y >= txtInput->y
+      && event.y <= txtInput->y + txtInput->height + txtInput->padding)
+  {
+    SDL_Log("txtInput size backspace: %zu", strlen(txtInput->text));
+
+    if(strlen(txtInput->text) >= 1)
+    {
+      txtInput->caretPostion -= 8;
+    }
+    return true;
+  }
+  return false;
+}
+
+bool caveTextInputIsInsideHoverEvent(TextInput txtInput, SDL_MouseMotionEvent event)
 {
   if (event.x >= txtInput.x
       && event.x <= txtInput.x + txtInput.width + txtInput.padding
@@ -135,6 +160,9 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   SDL_Surface* surface = NULL;
   if (!strlen(textInput.text))
   {
+    // set the caretPostion to 8
+    textInput.caretPostion = 8;
+
     // Optionally, you can create a blank surface with a default size
     Uint32 format = SDL_PIXELFORMAT_RGBA32;// SDL_PIXELFORMAT_RGBA8888
     surface = SDL_CreateRGBSurface(format, 1, 1, 1, 0, 0, 0, 0);
@@ -169,6 +197,15 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   SDL_Rect backgroundRect = { textInput.x, textInput.y, textInput.width + textInput.padding, textInput.height + textInput.padding };
   SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
   SDL_RenderFillRect(renderer, &backgroundRect);
+
+  // caret rectangle
+  SDL_Rect caretRect = { textInput.x + textInput.caretPostion + 1, textInput.y + textInput.padding, 1, textInput.height - textInput.padding };
+  SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
+  SDL_RenderFillRect(renderer, &caretRect);
+
+  //SDL_Log("surface.w: %d", surface->w);
+  //SDL_Log("surface.h: %d", surface->h);
+
 
   // text rectangle
   SDL_Rect textRect = { textInput.x + textInput.padding / 2, textInput.y + textInput.padding / 2, surface->w, surface->h};//textInput.width, textInput.height };

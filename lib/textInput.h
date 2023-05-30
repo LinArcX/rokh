@@ -38,6 +38,7 @@ typedef struct SDLTextInput
   uint16_t height;
   int64_t radius;
   uint8_t padding;
+  uint16_t caretPostion;
   const char* backgroundColor;
 
   char* text;
@@ -51,7 +52,8 @@ typedef struct SDLTextInput
 }TextInput;
 
 int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput);
-bool textInputIsInside_MouseButtonEvent(TextInput txtInput, SDL_MouseButtonEvent event);
-bool textInputIsInside_MouseMotionEvent(TextInput txtInput, SDL_MouseMotionEvent event);
+bool caveTextInputIsInsideBackSpaceEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
+bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
+bool caveTextInputIsInsideHoverEvent(TextInput txtInput, SDL_MouseMotionEvent event);
 
 #endif

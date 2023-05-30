@@ -9,30 +9,9 @@
 TextInput txtInputTest;
 
 //------------- Event Handlers -------------//
-void txtInputTestHoverHandler()
-{
-  if(textInputIsInside_MouseMotionEvent(txtInputTest, app->lastCycleMouseMotionEvent))
-  {
-    txtInputTest.hover.isHovered = true;
-    return;
-  }
-  txtInputTest.hover.isHovered = false;
-}
-
-void txtInputTestBackSpaceHandler()
-{
-  if(textInputIsInside_MouseButtonEvent(txtInputTest, app->lastCycleMouseButtonEvent))
-  {
-    if(strlen(txtInputTest.text) > 0)
-    {
-      txtInputTest.text[strlen(txtInputTest.text) - 1] = '\0';
-    }
-  }
-}
-
 void txtInputTestTextInputHandler()
 {
-  if(textInputIsInside_MouseButtonEvent(txtInputTest, app->lastCycleMouseButtonEvent))
+  if(caveTextInputIsInsideAppendCharEvent(&txtInputTest, app->lastCycleMouseButtonEvent))
   {
     txtInputTest.incomingChar = *app->lastCycleTextInputEvent.text;
     txtInputTest.text = (char*)realloc(txtInputTest.text, strlen(txtInputTest.text) + 1);
@@ -43,6 +22,27 @@ void txtInputTestTextInputHandler()
     txtInputTest.text[strlen(txtInputTest.text)] = txtInputTest.incomingChar;
     //txtInputTest.text[strlen(txtInputTest.text) + 1] = '\0';
   }
+}
+
+void txtInputTestBackSpaceHandler()
+{
+  if(caveTextInputIsInsideBackSpaceEvent(&txtInputTest, app->lastCycleMouseButtonEvent))
+  {
+    if(strlen(txtInputTest.text) > 0)
+    {
+      txtInputTest.text[strlen(txtInputTest.text) - 1] = '\0';
+    }
+  }
+}
+
+void txtInputTestHoverHandler()
+{
+  if(caveTextInputIsInsideHoverEvent(txtInputTest, app->lastCycleMouseMotionEvent))
+  {
+    txtInputTest.hover.isHovered = true;
+    return;
+  }
+  txtInputTest.hover.isHovered = false;
 }
 
 //------------- Widget Creation -------------//
@@ -56,14 +56,14 @@ void txtInputTestInitProperties()
 {
   txtInputTest.x = btnTest.x + btnTest.width + btnTest.padding + 10;
   txtInputTest.y = 20;
-  txtInputTest.radius = 1;
-  txtInputTest.padding = 2;
   txtInputTest.width = 200;
   txtInputTest.height = 20;
+  txtInputTest.radius = 1;
+  txtInputTest.padding = 2;
   txtInputTest.backgroundColor = "#DADADA"; //#262626
 
   txtInputTest.text = malloc(1);
-  memset(txtInputTest.text, ' ', 1);
+  //memset(txtInputTest.text, 0, 1);
   txtInputTest.textColor = "#262626"; //#DADADA, #FAFAFA
 
   txtInputTest.hover.isHovered = false;
