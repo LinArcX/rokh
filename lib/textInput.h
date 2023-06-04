@@ -2,6 +2,7 @@
 #define _TEXT_INPUT_H
 
 #include "util.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
@@ -48,12 +49,11 @@ typedef struct SDLTextInput
   TextInputHover hover;
   TextInputActive active;
   TextInputBorder border;
-
 }TextInput;
 
-int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput);
-bool caveTextInputIsInsideBackSpaceEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
-bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
-bool caveTextInputIsInsideHoverEvent(TextInput txtInput, SDL_MouseMotionEvent event);
-
+void textInputInit(TextInput* txtInput);
 #endif
+
+//bool caveTextInputIsInsideBackSpaceEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
+//bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
+//bool caveTextInputIsInsideHoverEvent(TextInput txtInput, SDL_MouseMotionEvent event);

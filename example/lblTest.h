@@ -5,5 +5,5 @@
 
 extern Label lblTest;
 
-void lblTestInit();
+int lblTestInit();
 #endif

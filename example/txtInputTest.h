@@ -3,6 +3,7 @@
 
 #include "../lib/textInput.h"
 
+// other widgets can access this widget through this declaration.
 extern TextInput txtInputTest;
 
 void txtInputTestInit();

@@ -1,5 +1,6 @@
 #include "util.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 
 void hexToRGBA(const char* hexColor, uint8_t* r, uint8_t* g, uint8_t* b, uint8_t* a)
@@ -27,7 +28,7 @@ void hexToRGBA(const char* hexColor, uint8_t* r, uint8_t* g, uint8_t* b, uint8_t
   }
 }
 
-void registerCallBackFunction(Node** head, void (*function)())
+void registerCallBackFunction(Node** head, int (*function)(void))
 {
   Node* newNode = (Node*)malloc(sizeof(Node));
   newNode->function = function;
@@ -48,14 +49,18 @@ void registerCallBackFunction(Node** head, void (*function)())
   }
 }
 
-void callFunctions(Node* head)
+int callFunctions(Node* head)
 {
   Node* current = head;
   while (current != NULL)
   {
-    current->function();
+    if(EXIT_FAILURE == current->function())
+    {
+      return EXIT_FAILURE;
+    }
     current = current->next;
   }
+  return EXIT_FAILURE;
 }
 
 void freeCallBackFunctionList(Node* head)

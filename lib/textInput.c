@@ -1,20 +1,25 @@
 #include <stddef.h>
+
+#include "app.h"
 #include "textInput.h"
 
 SDL_Color textInputBorderColor = {0};
-//------------- Region detection -------------//
-bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEvent event)
-{
-  if (event.x >= txtInput->x
-      && event.x <= txtInput->x + txtInput->width + txtInput->padding
-      && event.y >= txtInput->y
-      && event.y <= txtInput->y + txtInput->height + txtInput->padding)
-  {
-    SDL_Log("txtInput size append: %zu", strlen(txtInput->text));
+extern App* app;
+TextInput* textInput = NULL;
 
-   if(strlen(txtInput->text) * 8 < txtInput->width)
+//------------- Region detection -------------//
+bool caveTextInputIsInsideAppendCharEvent(TextInput* textInput, SDL_MouseButtonEvent event)
+{
+  if (event.x >= textInput->x
+      && event.x <= textInput->x + textInput->width + textInput->padding
+      && event.y >= textInput->y
+      && event.y <= textInput->y + textInput->height + textInput->padding)
+  {
+    SDL_Log("txtInput size append: %zu", strlen(textInput->text));
+
+   if(strlen(textInput->text) * 8 < textInput->width)
    {
-    txtInput->caretPostion += 8;
+    textInput->caretPostion += 8;
    }
 
     return true;
@@ -22,37 +27,76 @@ bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEv
   return false;
 }
 
-bool caveTextInputIsInsideBackSpaceEvent(TextInput* txtInput, SDL_MouseButtonEvent event)
+bool caveTextInputIsInsideBackSpaceEvent(TextInput* textInput, SDL_MouseButtonEvent event)
 {
-  if (event.x >= txtInput->x
-      && event.x <= txtInput->x + txtInput->width + txtInput->padding
-      && event.y >= txtInput->y
-      && event.y <= txtInput->y + txtInput->height + txtInput->padding)
+  if (event.x >= textInput->x
+      && event.x <= textInput->x + textInput->width + textInput->padding
+      && event.y >= textInput->y
+      && event.y <= textInput->y + textInput->height + textInput->padding)
   {
-    SDL_Log("txtInput size backspace: %zu", strlen(txtInput->text));
+    SDL_Log("txtInput size backspace: %zu", strlen(textInput->text));
 
-    if(strlen(txtInput->text) >= 1)
+    if(strlen(textInput->text) >= 1)
     {
-      txtInput->caretPostion -= 8;
+      textInput->caretPostion -= 8;
     }
     return true;
   }
   return false;
 }
 
-bool caveTextInputIsInsideHoverEvent(TextInput txtInput, SDL_MouseMotionEvent event)
+bool caveTextInputIsInsideHoverEvent(TextInput textInput, SDL_MouseMotionEvent event)
 {
-  if (event.x >= txtInput.x
-      && event.x <= txtInput.x + txtInput.width + txtInput.padding
-      && event.y >= txtInput.y
-      && event.y <= txtInput.y + txtInput.height + txtInput.padding)
-  {
-    return true;
-  }
   return false;
 }
+
+//------------- Event Handlers -------------//
+int txtInputTestTextInputHandler()
+{
+  if(caveTextInputIsInsideAppendCharEvent(textInput, app->lastCycleMouseButtonEvent))
+  {
+    textInput->incomingChar = *app->lastCycleTextInputEvent.text;
+    textInput->text = (char*)realloc(textInput->text, strlen(textInput->text) + 1);
+    if (NULL == textInput->text)
+    {
+      SDL_Log("Failed to reallocate memory\n");
+    }
+    textInput->text[strlen(textInput->text)] = textInput->incomingChar;
+    //txtInputTest.text[strlen(txtInputTest.text) + 1] = '\0';
+  }
+  return EXIT_SUCCESS;
+}
+
+int txtInputTestBackSpaceHandler()
+{
+  if(caveTextInputIsInsideBackSpaceEvent(textInput, app->lastCycleMouseButtonEvent))
+  {
+    if(strlen(textInput->text) > 0)
+    {
+      textInput->text[strlen(textInput->text) - 1] = '\0';
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+int txtInputTestHoverHandler()
+{
+  if (app->lastCycleMouseMotionEvent.x >= textInput->x
+      && app->lastCycleMouseMotionEvent.x <= textInput->x + textInput->width + textInput->padding
+      && app->lastCycleMouseMotionEvent.y >= textInput->y
+      && app->lastCycleMouseMotionEvent.y <= textInput->y + textInput->height + textInput->padding)
+  {
+    textInput->hover.isHovered = true;
+  }
+  else
+  {
+    textInput->hover.isHovered = false;
+  }
+  return EXIT_SUCCESS;
+}
+
 //------------- Borders -------------//
-void textInputCreateLeftBorder(SDL_Renderer* renderer, const TextInput* textInput)
+void textInputCreateLeftBorder()
 {
   SDL_Rect rect = {0};
   if(textInput->border.style == ALL)
@@ -69,11 +113,11 @@ void textInputCreateLeftBorder(SDL_Renderer* renderer, const TextInput* textInpu
    rect.w = textInput->border.width;
    rect.h = textInput->height + textInput->padding;
   }
-  SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
-  SDL_RenderFillRect(renderer, &rect);
+  SDL_SetRenderDrawColor(app->renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
+  SDL_RenderFillRect(app->renderer, &rect);
 }
 
-void textInputCreateRightBorder(SDL_Renderer* renderer, const TextInput* textInput)
+void textInputCreateRightBorder()
 {
   SDL_Rect rect = {0};
   if(textInput->border.style == ALL)
@@ -90,11 +134,11 @@ void textInputCreateRightBorder(SDL_Renderer* renderer, const TextInput* textInp
     rect.w = textInput->border.width;
     rect.h = textInput->height + textInput->padding;
   }
-  SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
-  SDL_RenderFillRect(renderer, &rect);
+  SDL_SetRenderDrawColor(app->renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
+  SDL_RenderFillRect(app->renderer, &rect);
 }
 
-void textInputCreateTopBorder(SDL_Renderer* renderer, const TextInput* textInput)
+void textInputCreateTopBorder()
 {
   SDL_Rect rect = {
     textInput->x,
@@ -102,11 +146,11 @@ void textInputCreateTopBorder(SDL_Renderer* renderer, const TextInput* textInput
     textInput->width + textInput->padding,
     textInput->border.height
   };
-  SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
-  SDL_RenderFillRect(renderer, &rect);
+  SDL_SetRenderDrawColor(app->renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
+  SDL_RenderFillRect(app->renderer, &rect);
 }
 
-void textInputCreateBottomBorder(SDL_Renderer* renderer, const TextInput* textInput)
+void textInputCreateBottomBorder()
 {
   SDL_Rect rect = {
     textInput->x ,
@@ -114,43 +158,44 @@ void textInputCreateBottomBorder(SDL_Renderer* renderer, const TextInput* textIn
     textInput->width + textInput->padding,
     textInput->border.height
   };
-  SDL_SetRenderDrawColor(renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
-  SDL_RenderFillRect(renderer, &rect);
+  SDL_SetRenderDrawColor(app->renderer, textInputBorderColor.r, textInputBorderColor.g, textInputBorderColor.b, textInputBorderColor.a);
+  SDL_RenderFillRect(app->renderer, &rect);
 }
 
-void textInputCreateAllBorder(SDL_Renderer* renderer, const TextInput* textInput)
+void textInputCreateAllBorder()
 {
-  textInputCreateLeftBorder(renderer, textInput);
-  textInputCreateRightBorder(renderer, textInput);
-  textInputCreateTopBorder(renderer, textInput);
-  textInputCreateBottomBorder(renderer, textInput);
+  textInputCreateLeftBorder();
+  textInputCreateRightBorder();
+  textInputCreateTopBorder();
+  textInputCreateBottomBorder();
 }
 
-int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
+// SDL_Renderer* renderer, TTF_Font* font,
+int textInputCreate()
 {
   uint8_t red, green, blue, alpha;
 
-  hexToRGBA(textInput.textColor, &red, &green, &blue, &alpha);
+  hexToRGBA(textInput->textColor, &red, &green, &blue, &alpha);
   SDL_Color textColor = { red, green, blue, alpha };
 
-  hexToRGBA(textInput.backgroundColor, &red, &green, &blue, &alpha);
+  hexToRGBA(textInput->backgroundColor, &red, &green, &blue, &alpha);
   SDL_Color backgroundColor = { red, green, blue, alpha };
 
-  hexToRGBA(textInput.border.color, &red, &green, &blue, &alpha);
+  hexToRGBA(textInput->border.color, &red, &green, &blue, &alpha);
   textInputBorderColor.r = red;
   textInputBorderColor.g = green;
   textInputBorderColor.b = blue;
   textInputBorderColor.a = alpha;
 
-  if (textInput.hover.isHovered)
+  if (textInput->hover.isHovered)
   {
-    hexToRGBA(textInput.hover.textColor, &red, &green, &blue, &alpha);
+    hexToRGBA(textInput->hover.textColor, &red, &green, &blue, &alpha);
     textColor.r = red;
     textColor.g = green;
     textColor.b = blue;
     textColor.a = alpha;
 
-    hexToRGBA(textInput.hover.backgroundColor, &red, &green, &blue, &alpha);
+    hexToRGBA(textInput->hover.backgroundColor, &red, &green, &blue, &alpha);
     backgroundColor.r = red;
     backgroundColor.g = green;
     backgroundColor.b = blue;
@@ -158,10 +203,10 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   }
 
   SDL_Surface* surface = NULL;
-  if (!strlen(textInput.text))
+  if (!strlen(textInput->text))
   {
     // set the caretPostion to 8
-    textInput.caretPostion = 8;
+    textInput->caretPostion = 8;
 
     // Optionally, you can create a blank surface with a default size
     Uint32 format = SDL_PIXELFORMAT_RGBA32;// SDL_PIXELFORMAT_RGBA8888
@@ -176,7 +221,7 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   }
   else
   {
-    surface = TTF_RenderText_Solid(font, textInput.text, textColor);
+    surface = TTF_RenderText_Solid(app->font, textInput->text, textColor);
     if (!surface)
     {
       SDL_Log("Failed to create surface(TTF_RenderText_Solid): %s", TTF_GetError());
@@ -185,7 +230,7 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
     }
   }
 
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(app->renderer, surface);
   if (!texture)
   {
     SDL_Log("Failed to create texture: %s", SDL_GetError());
@@ -194,40 +239,40 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
   }
 
   // background rectangle
-  SDL_Rect backgroundRect = { textInput.x, textInput.y, textInput.width + textInput.padding, textInput.height + textInput.padding };
-  SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-  SDL_RenderFillRect(renderer, &backgroundRect);
+  SDL_Rect backgroundRect = { textInput->x, textInput->y, textInput->width + textInput->padding, textInput->height + textInput->padding };
+  SDL_SetRenderDrawColor(app->renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+  SDL_RenderFillRect(app->renderer, &backgroundRect);
 
   // caret rectangle
-  SDL_Rect caretRect = { textInput.x + textInput.caretPostion + 1, textInput.y + textInput.padding, 1, textInput.height - textInput.padding };
-  SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-  SDL_RenderFillRect(renderer, &caretRect);
+  SDL_Rect caretRect = { textInput->x + textInput->caretPostion + 1, textInput->y + textInput->padding, 1, textInput->height - textInput->padding };
+  SDL_SetRenderDrawColor(app->renderer, textColor.r, textColor.g, textColor.b, textColor.a);
+  SDL_RenderFillRect(app->renderer, &caretRect);
 
   //SDL_Log("surface.w: %d", surface->w);
   //SDL_Log("surface.h: %d", surface->h);
 
 
   // text rectangle
-  SDL_Rect textRect = { textInput.x + textInput.padding / 2, textInput.y + textInput.padding / 2, surface->w, surface->h};//textInput.width, textInput.height };
-  SDL_RenderCopy(renderer, texture, NULL, &textRect);
+  SDL_Rect textRect = { textInput->x + textInput->padding / 2, textInput->y + textInput->padding / 2, surface->w, surface->h};//textInput.width, textInput.height };
+  SDL_RenderCopy(app->renderer, texture, NULL, &textRect);
 
   // create border
-  switch(textInput.border.style)
+  switch(textInput->border.style)
   {
     case LEFT:
-      textInputCreateLeftBorder(renderer, &textInput);
+      textInputCreateLeftBorder();
       break;
     case RIGHT:
-      textInputCreateRightBorder(renderer, &textInput);
+      textInputCreateRightBorder();
       break;
     case TOP:
-      textInputCreateTopBorder(renderer, &textInput);
+      textInputCreateTopBorder();
       break;
     case BOTTOM:
-      textInputCreateBottomBorder(renderer, &textInput);
+      textInputCreateBottomBorder();
       break;
     case ALL:
-      textInputCreateAllBorder(renderer, &textInput);
+      textInputCreateAllBorder();
       break;
     default:
       SDL_Log("ERROR -> unknown border style");
@@ -239,3 +284,28 @@ int textInputCreate(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
 
   return EXIT_SUCCESS;
 }
+
+int textInputCreateWidget()
+{
+  if(EXIT_SUCCESS == textInputCreate())
+  {
+    if(EXIT_SUCCESS == addWidget(app, TEXTINPUT, &textInput))
+    {
+      return EXIT_SUCCESS;
+    }
+  }
+  return EXIT_FAILURE;
+}
+
+void textInputInit(TextInput* txtInput)
+{
+  textInput = txtInput;
+  registerCallBackFunction(&app->hoverHandler, txtInputTestHoverHandler);
+  registerCallBackFunction(&app->backSpaceHandler, txtInputTestBackSpaceHandler);
+  registerCallBackFunction(&app->textInputHandler, txtInputTestTextInputHandler);
+  registerCallBackFunction(&app->widgetCreatorHandler, textInputCreateWidget);
+}
+
+//int textInputInit(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
+//{
+//}

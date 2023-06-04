@@ -1,6 +1,6 @@
 #include "txtInputTest.h"
 
-#include "../lib/app.h"
+//#include "../lib/app.h"
 #include "../lib/util.h"
 
 #include "btnTest.h"
@@ -8,51 +8,7 @@
 
 TextInput txtInputTest;
 
-//------------- Event Handlers -------------//
-void txtInputTestTextInputHandler()
-{
-  if(caveTextInputIsInsideAppendCharEvent(&txtInputTest, app->lastCycleMouseButtonEvent))
-  {
-    txtInputTest.incomingChar = *app->lastCycleTextInputEvent.text;
-    txtInputTest.text = (char*)realloc(txtInputTest.text, strlen(txtInputTest.text) + 1);
-    if (NULL == txtInputTest.text)
-    {
-      SDL_Log("Failed to reallocate memory\n");
-    }
-    txtInputTest.text[strlen(txtInputTest.text)] = txtInputTest.incomingChar;
-    //txtInputTest.text[strlen(txtInputTest.text) + 1] = '\0';
-  }
-}
-
-void txtInputTestBackSpaceHandler()
-{
-  if(caveTextInputIsInsideBackSpaceEvent(&txtInputTest, app->lastCycleMouseButtonEvent))
-  {
-    if(strlen(txtInputTest.text) > 0)
-    {
-      txtInputTest.text[strlen(txtInputTest.text) - 1] = '\0';
-    }
-  }
-}
-
-void txtInputTestHoverHandler()
-{
-  if(caveTextInputIsInsideHoverEvent(txtInputTest, app->lastCycleMouseMotionEvent))
-  {
-    txtInputTest.hover.isHovered = true;
-    return;
-  }
-  txtInputTest.hover.isHovered = false;
-}
-
-//------------- Widget Creation -------------//
-void txtInputTestCreateTestWidget()
-{
-  textInputCreate(app->renderer, app->font, txtInputTest);
-}
-
-//------------- Setup/Initialization -------------//
-void txtInputTestInitProperties()
+void txtInputTestInit()
 {
   txtInputTest.x = btnTest.x + btnTest.width + btnTest.padding + 10;
   txtInputTest.y = 20;
@@ -75,18 +31,6 @@ void txtInputTestInitProperties()
   txtInputTest.border.color = "#616161";
   txtInputTest.border.width = 2;
   txtInputTest.border.height = 2;
-}
 
-void txtInputTestSetupCallbackFunctions()
-{
-  registerCallBackFunction(&app->hoverHandler, txtInputTestHoverHandler);
-  registerCallBackFunction(&app->backSpaceHandler, txtInputTestBackSpaceHandler);
-  registerCallBackFunction(&app->textInputHandler, txtInputTestTextInputHandler);
-  registerCallBackFunction(&app->widgetCreatorHandler, txtInputTestCreateTestWidget);
-}
-
-void txtInputTestInit()
-{
-  txtInputTestInitProperties();
-  txtInputTestSetupCallbackFunctions();
+  textInputInit(&txtInputTest);
 }

@@ -17,7 +17,10 @@ int main()
     return EXIT_FAILURE;
   }
 
-  render();
+  if (EXIT_FAILURE == render())
+  {
+  return EXIT_FAILURE;
+  }
 
   cleanup();
   return EXIT_SUCCESS;

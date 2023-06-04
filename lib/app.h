@@ -8,8 +8,27 @@
 
 #include "../lib/util.h"
 
+typedef enum CaveWidgetType
+{
+  BUTTON = 0,
+  LABEL,
+  TEXTINPUT,
+  POPUP,
+  SLIDER
+} WidgetType;
+
+typedef struct {
+    WidgetType type; // A value to indicate the type of widget (e.g., 0 for button, 1 for label)
+    void* widgetPtr; // A pointer to the widget object (either button or label)
+} Widget;
+
+#define MAX_WIDGETS 700
+
 typedef struct SDLApp
 {
+   Widget widgets[MAX_WIDGETS];
+   int numWidgets;
+
   SDL_Window* window;
   SDL_Renderer* renderer;
 
@@ -57,8 +76,11 @@ typedef struct SDLApp
 
 extern App* app;
 
-int initialize(void (*initWidgets)());
-void render();
+int initialize(void (*initWidgets)(void));
+int render();
 void cleanup();
+
+int addWidget(App* app, int widgetType, void* widget);
+void printWidgets(App* app);
 
 #endif

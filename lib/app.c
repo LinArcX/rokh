@@ -7,20 +7,22 @@
 
 App* app;
 
-void windowPositionChangeHandler()
+int windowPositionChangeHandler()
 {
   app->x = app->lastCycleWindowEvent.data1;
   app->y = app->lastCycleWindowEvent.data2;
 
   SDL_Log("Window moved to (%d, %d)\n", app->x, app->y);
+  return EXIT_SUCCESS;
 }
 
-void windowKeyboardHandler()
+int windowKeyboardHandler()
 {
   if (app->lastCycleKeyboardEvent.keysym.sym == SDLK_F4 && (app->lastCycleKeyboardEvent.keysym.mod & KMOD_ALT))
   {
     app->isRunnig = false;
   }
+  return EXIT_SUCCESS;
 }
 
 //------------- Initialization -------------//
@@ -113,7 +115,7 @@ int initSDL()
   return EXIT_SUCCESS;
 }
 
-int initialize(void (*initWidget)())
+int initialize(void (*initWidget)(void))
 {
   initApp();
 
@@ -123,12 +125,11 @@ int initialize(void (*initWidget)())
   }
 
   initWidget();
-
   return EXIT_SUCCESS;
 }
 
 //------------- Rendering -------------//
-void render()
+int render()
 {
   SDL_Event event;
 
@@ -214,11 +215,15 @@ void render()
     SDL_SetRenderDrawColor(app->renderer, red, green, blue, alpha);
     SDL_RenderClear(app->renderer);
 
-    callFunctions(app->widgetCreatorHandler);
+    if(EXIT_FAILURE == callFunctions(app->widgetCreatorHandler))
+    {
+      return EXIT_FAILURE;
+    }
 
     SDL_RenderPresent(app->renderer);
     SDL_Delay(app->renderLoopDelay);
   }
+  return EXIT_SUCCESS;
 }
 
 //------------- CleanUp -------------//
@@ -246,4 +251,41 @@ void cleanup()
 
   free(app);
   app = NULL;
+}
+
+
+int addWidget(App* app, int widgetType, void* widget)
+{
+  if (app->numWidgets < MAX_WIDGETS) {
+    Widget newWidget;
+    newWidget.type = widgetType;
+    newWidget.widgetPtr = widget;
+    app->widgets[app->numWidgets++] = newWidget;
+    return EXIT_SUCCESS;
+  }
+  return EXIT_FAILURE;
+}
+
+void printWidgets(App* app)
+{
+  printf("Number of widgets: %d\n", app->numWidgets);
+  for (int i = 0; i < app->numWidgets; i++)
+  {
+    Widget* widget = &(app->widgets[i]);
+    switch (widget->type)
+    {
+      case BUTTON:
+        printf("Widget %d: Button\n", i);
+        break;
+      case LABEL:
+        printf("Widget %d: Label\n", i);
+        break;
+      case TEXTINPUT:
+        printf("Widget %d: TextInput\n", i);
+        break;
+      default:
+        printf("Widget %d: Unknown\n", i);
+        break;
+    }
+  }
 }

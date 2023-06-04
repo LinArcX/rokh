@@ -6,58 +6,7 @@
 
 Button btnTest;
 
-//------------- Event Handlers -------------//
-void btnTestLeftClickHandler()
-{
-  if (app->lastCycleMouseButtonEvent.x >= btnTest.x
-      && app->lastCycleMouseButtonEvent.x <= btnTest.x + btnTest.width + btnTest.padding
-      && app->lastCycleMouseButtonEvent.y >= btnTest.y
-      && app->lastCycleMouseButtonEvent.y <= btnTest.y + btnTest.height + btnTest.padding)
-  {
-    SDL_Log("[btnTest] leftButton Clicked!");
-  }
-}
-
-void btnTestRightClickHandler()
-{
-  if (app->lastCycleMouseButtonEvent.x >= btnTest.x
-      && app->lastCycleMouseButtonEvent.x <= btnTest.x + btnTest.width + btnTest.padding
-      && app->lastCycleMouseButtonEvent.y >= btnTest.y
-      && app->lastCycleMouseButtonEvent.y <= btnTest.y + btnTest.height + btnTest.padding)
-  {
-    SDL_Log("[btnTest] rightButton Clicked!");
-  }
-}
-
-void btnTestHoverHandler()
-{
-  if (app->lastCycleMouseMotionEvent.x >= btnTest.x
-      && app->lastCycleMouseMotionEvent.x <= btnTest.x + btnTest.width + btnTest.padding
-      && app->lastCycleMouseMotionEvent.y >= btnTest.y
-      && app->lastCycleMouseMotionEvent.y <= btnTest.y + btnTest.height + btnTest.padding)
-  {
-    btnTest.isHovered = true;
-    return;
-  }
-  btnTest.isHovered = false;
-}
-
-//------------- Widget Creation -------------//
-void btnTestWidgetCreate()
-{
-  ButtonCreate(app->renderer, app->font, btnTest);
-}
-
-//------------- Setup/Initialization -------------//
-void setupCallbackFunctions()
-{
-  registerCallBackFunction(&app->leftClickDownHandler, btnTestLeftClickHandler);
-  registerCallBackFunction(&app->rightClickDownHandler, btnTestRightClickHandler);
-  registerCallBackFunction(&app->hoverHandler, btnTestHoverHandler);
-  registerCallBackFunction(&app->widgetCreatorHandler, btnTestWidgetCreate);
-}
-
-void initProperties()
+void btnTestInit()
 {
   btnTest.x = lblTest.x + lblTest.width;
   btnTest.y = lblTest.y;
@@ -70,19 +19,15 @@ void initProperties()
   btnTest.text = "Search";
   btnTest.textColor = "#FAFAFA"; //#DADADA,
 
-  btnTest.isHovered = false;
-  btnTest.hoverText = "";
-  btnTest.hoverTextColor = "#212121";
-  btnTest.hoverBackgroundColor = "#A5D6A7"; //#FF7043, #FF8A65, #66BB6A, #1E1E1E
+  btnTest.hover.isHovered = false;
+  //btnTest.hoverText = "";
+  btnTest.hover.textColor = "#212121";
+  btnTest.hover.backgroundColor = "#A5D6A7"; //#FF7043, #FF8A65, #66BB6A, #1E1E1E
 
-  btnTest.borderColor = "#616161";
-  btnTest.borderStyle = ALL;
-  btnTest.borderDefaultWidth = 2;
-  btnTest.borderDefaultHeight = 2;
-}
+  btnTest.border.color = "#616161";
+  btnTest.border.style = ALL;
+  btnTest.border.width = 2;
+  btnTest.border.height = 2;
 
-void btnTestInit()
-{
-  setupCallbackFunctions();
-  initProperties();
+  buttonInit(&btnTest);
 }

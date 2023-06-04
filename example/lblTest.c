@@ -1,44 +1,10 @@
 #include "lblTest.h"
 #include "../lib/app.h"
-#include "../lib/util.h"
 
 Label lblTest;
 
-void lblTestLeftClickDownHandler()
+int lblTestInit()
 {
-  if (app->lastCycleMouseButtonEvent.x >= lblTest.x
-      && app->lastCycleMouseButtonEvent.x <= lblTest.x + lblTest.width + lblTest.padding
-      && app->lastCycleMouseButtonEvent.y >= lblTest.y
-      && app->lastCycleMouseButtonEvent.y <= lblTest.y + lblTest.height + lblTest.padding)
-  {
-    SDL_Log("[lblTest] leftButton Clicked!");
-  }
-}
-
-void lblTestRightClickDownHandler()
-{
-  if (app->lastCycleMouseButtonEvent.x >= lblTest.x
-      && app->lastCycleMouseButtonEvent.x <= lblTest.x + lblTest.width + lblTest.padding
-      && app->lastCycleMouseButtonEvent.y >= lblTest.y
-      && app->lastCycleMouseButtonEvent.y <= lblTest.y + lblTest.height + lblTest.padding)
-  {
-    SDL_Log("[lblTest] rightButton Clicked!");
-  }
-}
-
-void createLblTestWidget()
-{
-  createLable(app->renderer, app->font, lblTest);
-}
-
-void lblTestInit()
-{
-  // setup callback functions
-  registerCallBackFunction(&app->leftClickDownHandler, lblTestLeftClickDownHandler);
-  registerCallBackFunction(&app->rightClickDownHandler, lblTestRightClickDownHandler);
-  registerCallBackFunction(&app->widgetCreatorHandler, createLblTestWidget);
-
-  // initialize
   lblTest.x = 20;
   lblTest.y = 20;
   lblTest.radius = 1;
@@ -48,4 +14,5 @@ void lblTestInit()
   lblTest.text = "Name: ";
   lblTest.textColor = "#FAFAFA";
   lblTest.backgroundColor = app->backgroundColor;
+  return EXIT_SUCCESS;
 }
