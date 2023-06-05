@@ -5,16 +5,16 @@ Label lblTest;
 
 void lblTestInit()
 {
+  lblTest.UID = "lblTest";
   lblTest.x = 20;
   lblTest.y = 20;
   lblTest.radius = 1;
   lblTest.width = 50;
   lblTest.height = 20;
-  lblTest.padding = 4;
+  lblTest.padding = 6;
   lblTest.text = "Name: ";
   lblTest.textColor = "#FAFAFA";
-  lblTest.backgroundColor = app->backgroundColor;// "#1E1E1E";
+  lblTest.backgroundColor = app->backgroundColor;// "#1E1E1E"
 
-  addWidget(app, LABEL, &lblTest);
   labelInit(&lblTest);
 }

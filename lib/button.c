@@ -3,9 +3,9 @@
 #include "app.h"
 #include "button.h"
 
-SDL_Color buttonBorderColor = {0};
 extern App* app;
 Button* button = NULL;
+SDL_Color buttonBorderColor = {0};
 
 //------------- Event Handlers -------------//
 int buttonLeftClickHandler()
@@ -15,7 +15,10 @@ int buttonLeftClickHandler()
       && app->lastCycleMouseButtonEvent.y >= button->y
       && app->lastCycleMouseButtonEvent.y <= button->y + button->height + button->padding)
   {
-    SDL_Log("[btnTest] leftButton Clicked!");
+    if(NULL != button->onLeftClick)
+    {
+      button->onLeftClick(app->lastCycleMouseButtonEvent.x, app->lastCycleMouseButtonEvent.y);
+    }
   }
   return EXIT_SUCCESS;
 }
@@ -27,7 +30,10 @@ int buttonRightClickHandler()
       && app->lastCycleMouseButtonEvent.y >= button->y
       && app->lastCycleMouseButtonEvent.y <= button->y + button->height + button->padding)
   {
-    SDL_Log("[btnTest] rightButton Clicked!");
+    if(NULL != button->onRightClick)
+    {
+      button->onRightClick(app->lastCycleMouseButtonEvent.x, app->lastCycleMouseButtonEvent.y);
+    }
   }
   return EXIT_SUCCESS;
 }
@@ -39,6 +45,13 @@ int buttonHoverHandler()
       && app->lastCycleMouseMotionEvent.y >= button->y
       && app->lastCycleMouseMotionEvent.y <= button->y + button->height + button->padding)
   {
+    // for external logics
+    if(NULL != button->onHovered)
+    {
+      button->onHovered(app->lastCycleMouseMotionEvent.x, app->lastCycleMouseMotionEvent.y);
+    }
+
+    // for internal logic
     button->hover.isHovered = true;
   }
   else
@@ -171,7 +184,12 @@ int buttonCreate() {
   }
 
   // background rectangle
-  SDL_Rect backgroundRect = { button->x, button->y, button->width + button->padding, button->height + button->padding };
+  SDL_Rect backgroundRect = {
+    button->x,
+    button->y,
+    button->width + button->padding,
+    button->height + button->padding
+  };
   SDL_SetRenderDrawColor(app->renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
   SDL_RenderFillRect(app->renderer, &backgroundRect);
 
@@ -198,12 +216,16 @@ int buttonCreate() {
   }
 
   // text rectangle
-  SDL_Rect textRect = { button->x + button->padding / 2, button->y + button->padding / 2, surface->w, surface->h};//button.width, button.height };
+  SDL_Rect textRect = {
+    button->x + (button->width - surface->w) / 2 + button->padding / 2,
+    button->y + (button->height - surface->h) / 2 + button->padding / 2,
+    surface->w,
+    surface->h
+  };
   SDL_RenderCopy(app->renderer, texture, NULL, &textRect);
 
   SDL_FreeSurface(surface);
   SDL_DestroyTexture(texture);
-
   return EXIT_SUCCESS;
 }
 
@@ -223,4 +245,6 @@ void buttonInit(Button* btn)
   registerCallBackFunction(&app->leftClickDownHandler, buttonLeftClickHandler);
   registerCallBackFunction(&app->rightClickDownHandler, buttonRightClickHandler);
   registerCallBackFunction(&app->widgetCreatorHandler, buttonCreateWidget);
+
+  addWidget(app, BUTTON, button->UID, &button);
 }

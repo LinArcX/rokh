@@ -19,7 +19,7 @@ typedef enum CaveWidgetType
 
 typedef struct {
     WidgetType type; // A value to indicate the type of widget (e.g., 0 for button, 1 for label)
-    char* GUID;
+    char* UID;
     void* widgetPtr; // A pointer to the widget object (either button or label)
 } Widget;
 
@@ -81,7 +81,7 @@ int initialize(void (*initWidgets)(void));
 int render();
 void cleanup();
 
-int addWidget(App* app, int widgetType, void* widget);
+int addWidget(App* app, int widgetType, char* UID, void* widget);
 void printWidgets(App* app);
 
 #endif

@@ -255,11 +255,12 @@ void cleanup()
 }
 
 
-int addWidget(App* app, int widgetType, void* widget)
+int addWidget(App* app, int widgetType, char* UID, void* widget)
 {
   if (app->numWidgets < MAX_WIDGETS) {
     Widget newWidget;
     newWidget.type = widgetType;
+    newWidget.UID = UID;
     newWidget.widgetPtr = widget;
     app->widgets[app->numWidgets++] = newWidget;
     return EXIT_SUCCESS;
@@ -273,20 +274,20 @@ void printWidgets(App* app)
   for (int i = 0; i < app->numWidgets; i++)
   {
     Widget* widget = &(app->widgets[i]);
-    switch (widget->type)
-    {
-      case BUTTON:
-        printf("Widget %d: Button\n", i);
-        break;
-      case LABEL:
-        printf("Widget %d: Label\n", i);
-        break;
-      case TEXTINPUT:
-        printf("Widget %d: TextInput\n", i);
-        break;
-      default:
-        printf("Widget %d: Unknown\n", i);
-        break;
-    }
+    printf("Type: %d, UID: %s\n", i, widget->UID);
+    //switch (widget->type)
+    //{
+    //  case BUTTON:
+    //    break;
+    //  case LABEL:
+    //    printf("Type: %d: Label\n", i);
+    //    break;
+    //  case TEXTINPUT:
+    //    printf("Type: %d: TextInput\n", i);
+    //    break;
+    //  default:
+    //    printf("Type: %d: Unknown\n", i);
+    //    break;
+    //}
   }
 }

@@ -1,5 +1,5 @@
-#ifndef _LABEL_H
-#define _LABEL_H
+#ifndef CAVE_LABEL_H
+#define CAVE_LABEL_H
 
 #include "util.h"
 
@@ -16,6 +16,7 @@ typedef struct CaveBorder
 
 typedef struct CaveLabel
 {
+  char* UID;
   int16_t x;
   int16_t y;
   uint16_t width;
@@ -30,4 +31,5 @@ typedef struct CaveLabel
 } Label;
 
 void labelInit(Label* label);
+
 #endif

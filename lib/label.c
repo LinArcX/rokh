@@ -3,9 +3,9 @@
 #include "app.h"
 #include "label.h"
 
-SDL_Color labelBorderColor = {0};
 extern App* app;
 Label* label = NULL;
+SDL_Color labelBorderColor = {0};
 
 int labelCreate() {
   uint8_t red, green, blue, alpha;
@@ -38,7 +38,13 @@ int labelCreate() {
   SDL_RenderFillRect(app->renderer, &backgroundRect);
 
   // text rectangle
-  SDL_Rect textRect = { label->x + label->padding / 2, label->y + label->padding / 2, surface->w, surface->h}; //label.width, label.height };
+  SDL_Rect textRect = {
+    label->x + (label->width - surface->w) / 2 + label->padding / 2,
+    label->y + (label->height - surface->h) / 2 + label->padding / 2,
+    surface->w,
+    surface->h
+  };
+
   SDL_RenderCopy(app->renderer, texture, NULL, &textRect);
 
   SDL_FreeSurface(surface);
@@ -59,4 +65,6 @@ void labelInit(Label* lbl)
 {
   label = lbl;
   registerCallBackFunction(&app->widgetCreatorHandler, labelCreateWidget);
+
+  addWidget(app, LABEL, label->UID, &label);
 }

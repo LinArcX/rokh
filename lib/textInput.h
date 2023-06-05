@@ -1,5 +1,5 @@
-#ifndef _TEXT_INPUT_H
-#define _TEXT_INPUT_H
+#ifndef CAVE_TEXT_INPUT_H
+#define CAVE_TEXT_INPUT_H
 
 #include "util.h"
 
@@ -13,7 +13,7 @@ typedef struct CaveTextInputHover
   const char* textColor;
   const char* borderColor;
   const char* backgroundColor;
-}TextInputHover;
+} TextInputHover;
 
 typedef struct CaveTextInputActive
 {
@@ -21,7 +21,7 @@ typedef struct CaveTextInputActive
   const char* textColor;
   const char* borderColor;
   const char* backgroundColor;
-}TextInputActive;
+} TextInputActive;
 
 typedef struct CaveTextInputBorder
 {
@@ -29,10 +29,11 @@ typedef struct CaveTextInputBorder
   const char* color;
   uint8_t width;
   uint8_t height;
-}TextInputBorder;
+} TextInputBorder;
 
 typedef struct CaveTextInput
 {
+  char* UID;
   int16_t x;
   int16_t y;
   uint16_t width;
@@ -49,11 +50,14 @@ typedef struct CaveTextInput
   TextInputHover hover;
   TextInputActive active;
   TextInputBorder border;
+
+  void (*onBackSpace)(void);
+  void (*onEmpty)(void);
+  void (*onCharAppend)(void);
+  void (*onHovered)(void);
+
 }TextInput;
 
 void textInputInit(TextInput* txtInput);
-#endif
 
-//bool caveTextInputIsInsideBackSpaceEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
-//bool caveTextInputIsInsideAppendCharEvent(TextInput* txtInput, SDL_MouseButtonEvent event);
-//bool caveTextInputIsInsideHoverEvent(TextInput txtInput, SDL_MouseMotionEvent event);
+#endif

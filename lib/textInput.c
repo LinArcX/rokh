@@ -15,13 +15,10 @@ bool caveTextInputIsInsideAppendCharEvent(TextInput* textInput, SDL_MouseButtonE
       && event.y >= textInput->y
       && event.y <= textInput->y + textInput->height + textInput->padding)
   {
-    SDL_Log("txtInput size append: %zu", strlen(textInput->text));
-
    if(strlen(textInput->text) * 8 < textInput->width)
    {
     textInput->caretPostion += 8;
    }
-
     return true;
   }
   return false;
@@ -34,8 +31,6 @@ bool caveTextInputIsInsideBackSpaceEvent(TextInput* textInput, SDL_MouseButtonEv
       && event.y >= textInput->y
       && event.y <= textInput->y + textInput->height + textInput->padding)
   {
-    SDL_Log("txtInput size backspace: %zu", strlen(textInput->text));
-
     if(strlen(textInput->text) >= 1)
     {
       textInput->caretPostion -= 8;
@@ -62,6 +57,10 @@ int txtInputTestTextInputHandler()
       SDL_Log("Failed to reallocate memory\n");
     }
     textInput->text[strlen(textInput->text)] = textInput->incomingChar;
+    if(NULL != textInput->onCharAppend)
+    {
+      textInput->onCharAppend();
+    }
     //txtInputTest.text[strlen(txtInputTest.text) + 1] = '\0';
   }
   return EXIT_SUCCESS;
@@ -71,9 +70,20 @@ int txtInputTestBackSpaceHandler()
 {
   if(caveTextInputIsInsideBackSpaceEvent(textInput, app->lastCycleMouseButtonEvent))
   {
+    if(NULL != textInput->onBackSpace)
+    {
+      textInput->onBackSpace();
+    }
     if(strlen(textInput->text) > 0)
     {
       textInput->text[strlen(textInput->text) - 1] = '\0';
+    }
+    else
+    {
+      if(NULL != textInput->onEmpty)
+      {
+        textInput->onEmpty();
+      }
     }
   }
   return EXIT_SUCCESS;
@@ -86,6 +96,11 @@ int txtInputTestHoverHandler()
       && app->lastCycleMouseMotionEvent.y >= textInput->y
       && app->lastCycleMouseMotionEvent.y <= textInput->y + textInput->height + textInput->padding)
   {
+    if(NULL != textInput->onHovered)
+    {
+      textInput->onHovered();
+    }
+
     textInput->hover.isHovered = true;
   }
   else
@@ -239,21 +254,39 @@ int textInputCreate()
   }
 
   // background rectangle
-  SDL_Rect backgroundRect = { textInput->x, textInput->y, textInput->width + textInput->padding, textInput->height + textInput->padding };
+  SDL_Rect backgroundRect = {
+    textInput->x,
+    textInput->y,
+    textInput->width + textInput->padding,
+    textInput->height + textInput->padding
+  };
   SDL_SetRenderDrawColor(app->renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
   SDL_RenderFillRect(app->renderer, &backgroundRect);
 
   // caret rectangle
-  SDL_Rect caretRect = { textInput->x + textInput->caretPostion + 1, textInput->y + textInput->padding, 1, textInput->height - textInput->padding };
+  SDL_Rect caretRect = {
+    textInput->x + textInput->caretPostion - 1,
+    textInput->y + (textInput->padding / 2),
+    1,
+    textInput->height - (textInput->padding / 2)
+  };
   SDL_SetRenderDrawColor(app->renderer, textColor.r, textColor.g, textColor.b, textColor.a);
   SDL_RenderFillRect(app->renderer, &caretRect);
 
   //SDL_Log("surface.w: %d", surface->w);
   //SDL_Log("surface.h: %d", surface->h);
 
-
   // text rectangle
   SDL_Rect textRect = { textInput->x + textInput->padding / 2, textInput->y + textInput->padding / 2, surface->w, surface->h};//textInput.width, textInput.height };
+
+
+  //SDL_Rect textRect = {
+  //  textInput->x + (textInput->width - surface->w) / 2 + textInput->padding / 2,
+  //  textInput->y + (textInput->height - surface->h) / 2 + textInput->padding / 2,
+  //  surface->w,
+  //  surface->h
+  //};
+
   SDL_RenderCopy(app->renderer, texture, NULL, &textRect);
 
   // create border
@@ -301,8 +334,6 @@ void textInputInit(TextInput* txtInput)
   registerCallBackFunction(&app->backSpaceHandler, txtInputTestBackSpaceHandler);
   registerCallBackFunction(&app->textInputHandler, txtInputTestTextInputHandler);
   registerCallBackFunction(&app->widgetCreatorHandler, textInputCreateWidget);
-}
 
-//int textInputInit(SDL_Renderer* renderer, TTF_Font* font, TextInput textInput)
-//{
-//}
+  addWidget(app, TEXTINPUT, textInput->UID, &textInput);
+}

@@ -54,7 +54,7 @@ _createBuildDir() {
 
 _generateTags() {
   echo ">>> generating tags"
-  ctags --fields=+iaS --extras=+q --extras=+f -R *
+  ctags --fields=+iaS --extras=+q --extras=+f -R lib/* example/* assets/*
 }
 
 _compile() {
