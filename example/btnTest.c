@@ -29,5 +29,6 @@ void btnTestInit()
   btnTest.border.width = 2;
   btnTest.border.height = 2;
 
+  addWidget(app, BUTTON, &btnTest);
   buttonInit(&btnTest);
 }

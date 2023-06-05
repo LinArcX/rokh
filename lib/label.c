@@ -50,10 +50,7 @@ int labelCreateWidget()
 {
   if(EXIT_SUCCESS == labelCreate())
   {
-    if(EXIT_SUCCESS == addWidget(app, LABEL, &label))
-    {
-      return EXIT_SUCCESS;
-    }
+    return EXIT_SUCCESS;
   }
   return EXIT_FAILURE;
 }

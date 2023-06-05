@@ -211,10 +211,7 @@ int buttonCreateWidget()
 {
   if(EXIT_SUCCESS == buttonCreate())
   {
-    if(EXIT_SUCCESS == addWidget(app, BUTTON, &button))
-    {
-      return EXIT_SUCCESS;
-    }
+    return EXIT_SUCCESS;
   }
   return EXIT_FAILURE;
 }
@@ -227,9 +224,3 @@ void buttonInit(Button* btn)
   registerCallBackFunction(&app->rightClickDownHandler, buttonRightClickHandler);
   registerCallBackFunction(&app->widgetCreatorHandler, buttonCreateWidget);
 }
-
-//------------- Widget Creation -------------//
-//void btnTestWidgetCreate()
-//{
-//  ButtonCreate(app->renderer, app->font, btnTest);
-//}

@@ -60,7 +60,7 @@ int callFunctions(Node* head)
     }
     current = current->next;
   }
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 void freeCallBackFunctionList(Node* head)

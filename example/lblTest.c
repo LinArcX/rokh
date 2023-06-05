@@ -3,7 +3,7 @@
 
 Label lblTest;
 
-int lblTestInit()
+void lblTestInit()
 {
   lblTest.x = 20;
   lblTest.y = 20;
@@ -13,6 +13,8 @@ int lblTestInit()
   lblTest.padding = 4;
   lblTest.text = "Name: ";
   lblTest.textColor = "#FAFAFA";
-  lblTest.backgroundColor = app->backgroundColor;
-  return EXIT_SUCCESS;
+  lblTest.backgroundColor = app->backgroundColor;// "#1E1E1E";
+
+  addWidget(app, LABEL, &lblTest);
+  labelInit(&lblTest);
 }

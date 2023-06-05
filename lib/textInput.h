@@ -7,7 +7,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 
-typedef struct SDLTextInputHover
+typedef struct CaveTextInputHover
 {
   bool isHovered;
   const char* textColor;
@@ -15,7 +15,7 @@ typedef struct SDLTextInputHover
   const char* backgroundColor;
 }TextInputHover;
 
-typedef struct SDLTextInputActive
+typedef struct CaveTextInputActive
 {
   bool isActive;
   const char* textColor;
@@ -23,7 +23,7 @@ typedef struct SDLTextInputActive
   const char* backgroundColor;
 }TextInputActive;
 
-typedef struct SDLTextInputBorder
+typedef struct CaveTextInputBorder
 {
   BorderStyle style;
   const char* color;
@@ -31,7 +31,7 @@ typedef struct SDLTextInputBorder
   uint8_t height;
 }TextInputBorder;
 
-typedef struct SDLTextInput
+typedef struct CaveTextInput
 {
   int16_t x;
   int16_t y;

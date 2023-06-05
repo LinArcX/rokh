@@ -19,10 +19,11 @@ typedef enum CaveWidgetType
 
 typedef struct {
     WidgetType type; // A value to indicate the type of widget (e.g., 0 for button, 1 for label)
+    char* GUID;
     void* widgetPtr; // A pointer to the widget object (either button or label)
 } Widget;
 
-#define MAX_WIDGETS 700
+#define MAX_WIDGETS 10
 
 typedef struct SDLApp
 {

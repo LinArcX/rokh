@@ -1,6 +1,7 @@
 #include "app.h"
 #include "util.h"
 
+#include <time.h>
 #include <stdlib.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>

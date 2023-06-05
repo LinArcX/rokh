@@ -289,10 +289,7 @@ int textInputCreateWidget()
 {
   if(EXIT_SUCCESS == textInputCreate())
   {
-    if(EXIT_SUCCESS == addWidget(app, TEXTINPUT, &textInput))
-    {
-      return EXIT_SUCCESS;
-    }
+    return EXIT_SUCCESS;
   }
   return EXIT_FAILURE;
 }

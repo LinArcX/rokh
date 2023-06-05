@@ -1,9 +1,7 @@
 #include "txtInputTest.h"
-
-//#include "../lib/app.h"
-#include "../lib/util.h"
-
 #include "btnTest.h"
+#include "../lib/app.h"
+
 #include <string.h>
 
 TextInput txtInputTest;
@@ -32,5 +30,6 @@ void txtInputTestInit()
   txtInputTest.border.width = 2;
   txtInputTest.border.height = 2;
 
+  addWidget(app, TEXTINPUT, &txtInputTest);
   textInputInit(&txtInputTest);
 }

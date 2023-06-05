@@ -14,7 +14,7 @@ typedef struct CaveBorder
   uint8_t height;
 } LabelBorder;
 
-typedef struct SDLLabel
+typedef struct CaveLabel
 {
   int16_t x;
   int16_t y;
@@ -29,5 +29,5 @@ typedef struct SDLLabel
   LabelBorder border;
 } Label;
 
-void textInputInit(Label* label);
+void labelInit(Label* label);
 #endif
