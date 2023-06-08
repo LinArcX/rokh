@@ -5,7 +5,7 @@
 
 # TextInput
 - [DONE] add caret property.
-  - [] add caretShape property.
+  - [DONE] add caretShape property.(VERTICAL/HORIZONTAL)
   - [] add caretColor property.
   - [] add caretAnimation property.
 - [] add textModel property(it should be an enum):

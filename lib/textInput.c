@@ -6,6 +6,7 @@
 SDL_Color textInputBorderColor = {0};
 extern App* app;
 TextInput* textInput = NULL;
+SDL_Rect caretRect = {0};
 
 //------------- Region detection -------------//
 bool caveTextInputIsInsideAppendCharEvent(TextInput* textInput, SDL_MouseButtonEvent event)
@@ -15,11 +16,22 @@ bool caveTextInputIsInsideAppendCharEvent(TextInput* textInput, SDL_MouseButtonE
       && event.y >= textInput->y
       && event.y <= textInput->y + textInput->height + textInput->padding)
   {
-   if(strlen(textInput->text) * 8 < textInput->width)
-   {
-    textInput->caretPostion += 8;
-   }
-    return true;
+    if(textInput->caret.type == VERTICAL)
+    {
+      if(strlen(textInput->text) * 8 < textInput->width - caretRect.w * 16)
+      {
+        textInput->caret.postion += 8;
+        return true;
+      }
+    }
+    if(textInput->caret.type == HORIZONTAL)
+    {
+      if(strlen(textInput->text) * 8 < textInput->width - caretRect.w * 2)
+      {
+        textInput->caret.postion += 8;
+        return true;
+      }
+    }
   }
   return false;
 }
@@ -33,7 +45,7 @@ bool caveTextInputIsInsideBackSpaceEvent(TextInput* textInput, SDL_MouseButtonEv
   {
     if(strlen(textInput->text) >= 1)
     {
-      textInput->caretPostion -= 8;
+      textInput->caret.postion -= 8;
     }
     return true;
   }
@@ -221,7 +233,7 @@ int textInputCreate()
   if (!strlen(textInput->text))
   {
     // set the caretPostion to 8
-    textInput->caretPostion = 8;
+    textInput->caret.postion = 8;
 
     // Optionally, you can create a blank surface with a default size
     Uint32 format = SDL_PIXELFORMAT_RGBA32;// SDL_PIXELFORMAT_RGBA8888
@@ -264,12 +276,20 @@ int textInputCreate()
   SDL_RenderFillRect(app->renderer, &backgroundRect);
 
   // caret rectangle
-  SDL_Rect caretRect = {
-    textInput->x + textInput->caretPostion - 1,
-    textInput->y + (textInput->padding / 2),
-    1,
-    textInput->height - (textInput->padding / 2)
-  };
+  if(VERTICAL == textInput->caret.type)
+  {
+    caretRect.x = textInput->x + textInput->caret.postion - 4;
+    caretRect.y = textInput->y + (textInput->padding / 2);
+    caretRect.w = 1;
+    caretRect.h = textInput->height - (textInput->padding / 2);
+  }
+  else
+  {
+    caretRect.x = textInput->x + textInput->caret.postion - 4;
+    caretRect.y = textInput->y * 2 - textInput->padding / 2;
+    caretRect.w = 8;
+    caretRect.h = 1;
+  }
   SDL_SetRenderDrawColor(app->renderer, textColor.r, textColor.g, textColor.b, textColor.a);
   SDL_RenderFillRect(app->renderer, &caretRect);
 
@@ -277,8 +297,12 @@ int textInputCreate()
   //SDL_Log("surface.h: %d", surface->h);
 
   // text rectangle
-  SDL_Rect textRect = { textInput->x + textInput->padding / 2, textInput->y + textInput->padding / 2, surface->w, surface->h};//textInput.width, textInput.height };
-
+  SDL_Rect textRect = {
+    textInput->x + textInput->padding / 2,
+    textInput->y + textInput->padding / 2,
+    surface->w,
+    surface->h
+  };
 
   //SDL_Rect textRect = {
   //  textInput->x + (textInput->width - surface->w) / 2 + textInput->padding / 2,

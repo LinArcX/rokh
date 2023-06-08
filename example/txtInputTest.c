@@ -26,6 +26,7 @@ void txtInputTestInit()
   txtInputTest.y = btnTest.y;
   txtInputTest.radius = 1;
   txtInputTest.padding = 6;
+  txtInputTest.caret.type = HORIZONTAL;
   txtInputTest.width = 200;
   txtInputTest.height = btnTest.height;
   txtInputTest.backgroundColor = "#DADADA"; //#262626

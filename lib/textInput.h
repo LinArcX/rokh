@@ -31,6 +31,18 @@ typedef struct CaveTextInputBorder
   uint8_t height;
 } TextInputBorder;
 
+typedef enum CaveCaretType
+{
+  VERTICAL = 0,
+  HORIZONTAL,
+} CaretType;
+
+typedef struct CaveTextInputCaret
+{
+  CaretType type;
+  uint16_t postion;
+} Caret;
+
 typedef struct CaveTextInput
 {
   char* UID;
@@ -40,7 +52,7 @@ typedef struct CaveTextInput
   uint16_t height;
   int64_t radius;
   uint8_t padding;
-  uint16_t caretPostion;
+  Caret caret;
   const char* backgroundColor;
 
   char* text;
