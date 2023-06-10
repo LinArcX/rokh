@@ -7,6 +7,12 @@
 
 typedef enum
 {
+  THEME_DEFAULT = 0,
+  THEME_GRUVBOX,
+} CaveThemeType;
+
+typedef enum
+{
   BUTTON = 0,
   LABEL,
   TEXTINPUT,
@@ -33,14 +39,12 @@ typedef enum
 typedef struct
 {
   bool isHovered;
-  const char* color;
 } CaveHover;
 
 typedef struct
 {
   uint8_t width;
   uint8_t height;
-  const char* color;
   CaveHover hover;
   CaveBorderStyle style;
 } CaveBorder;
@@ -60,13 +64,11 @@ typedef struct
 typedef struct
 {
   bool isActive;
-  const char* color;
 } CaveActive;
 
 typedef struct
 {
   char* text;
-  const char* color;
   CaveHover hover;
 } CaveText;
 
@@ -82,7 +84,6 @@ typedef struct
   uint16_t height;
   uint8_t padding;
   int64_t radius;
-  const char* color;
 
   CaveFont font;
   CaveHover hover;

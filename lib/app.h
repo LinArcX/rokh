@@ -8,9 +8,60 @@
 #include "../lib/util.h"
 #include "widget.h"
 
-#define MAX_WIDGETS 10000
+#define CAVE_MAX_WIDGETS 10000
 
-typedef struct SDLApp
+typedef struct
+{
+  struct
+  {
+    char bg[8];
+  } window;
+
+  struct
+  {
+    char bg[8];
+    char border[8];
+    char text[8];
+    struct
+    {
+      char bg[8];
+      char border[8];
+      char text[8];
+
+    } hover;
+  } label;
+
+  struct
+  {
+    char bg[8];
+    char border[8];
+    char text[8];
+    struct
+    {
+      char bg[8];
+      char border[8];
+      char text[8];
+
+    } hover;
+  } button;
+
+  struct
+  {
+    char bg[8];
+    char border[8];
+    char text[8];
+    struct
+    {
+      char bg[8];
+      char border[8];
+      char text[8];
+
+    } hover;
+  } textInput;
+
+} CaveTheme;
+
+typedef struct
 {
   SDL_Window* window;
   SDL_Renderer* renderer;
@@ -20,7 +71,8 @@ typedef struct SDLApp
 
   int numWidgets;
   CaveWidget widget;
-  CaveWidget widgets[MAX_WIDGETS];
+  CaveWidget widgets[CAVE_MAX_WIDGETS];
+  CaveTheme theme;
 
   Node* hoverHandler;
   Node* selectionHandler;
@@ -49,13 +101,14 @@ typedef struct SDLApp
 
   SDL_TextInputEvent   lastCycleTextInputEvent;
   SDL_TextEditingEvent lastCycleTextEditingEvent;
-}App;
+} CaveApp;
 
-extern App* app;
+extern CaveApp* app;
 
 int initialize(int (*initWidgets)(void));
 int render();
 void cleanup();
-int addWidget(App* app, int widgetType, char* UID, void* widget);
+int addWidget(CaveApp* app, int widgetType, char* UID, void* widget);
+void setTheme(uint8_t themeType);
 
 #endif

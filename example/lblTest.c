@@ -13,8 +13,6 @@ int lblTestInit()
   lblTest.widget.height = 20;
   lblTest.widget.padding = 6;
   lblTest.text.text = "Name: ";
-  lblTest.text.color = "#424242";
-  lblTest.widget.color = app->widget.color;
 
   if(EXIT_FAILURE == labelInit(&lblTest))
   {

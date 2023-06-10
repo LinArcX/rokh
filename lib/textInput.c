@@ -4,7 +4,7 @@
 #include "app.h"
 #include "textInput.h"
 
-extern App* app;
+extern CaveApp* app;
 SDL_Rect caretRect = {0};
 CaveTextInput* textInput = NULL;
 
@@ -212,19 +212,19 @@ int textInputCreate()
   uint8_t red, green, blue, alpha;
   if (textInput->widget.hover.isHovered)
   {
-    hexToRGBA(textInput->text.hover.color, &red, &green, &blue, &alpha);
-    textColor.r = red;
-    textColor.g = green;
-    textColor.b = blue;
-    textColor.a = alpha;
-
-    hexToRGBA(textInput->widget.hover.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.textInput.hover.bg, &red, &green, &blue, &alpha);
     backgroundColor.r = red;
     backgroundColor.g = green;
     backgroundColor.b = blue;
     backgroundColor.a = alpha;
 
-    hexToRGBA(textInput->widget.border.hover.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.textInput.hover.text, &red, &green, &blue, &alpha);
+    textColor.r = red;
+    textColor.g = green;
+    textColor.b = blue;
+    textColor.a = alpha;
+
+    hexToRGBA(app->theme.textInput.hover.border, &red, &green, &blue, &alpha);
     textInputBorderColor.r = red;
     textInputBorderColor.g = green;
     textInputBorderColor.b = blue;
@@ -232,19 +232,19 @@ int textInputCreate()
   }
   else
   {
-    hexToRGBA(textInput->text.color, &red, &green, &blue, &alpha);
-    textColor.r = red;
-    textColor.g = green;
-    textColor.b = blue;
-    textColor.a = alpha;
-
-    hexToRGBA(textInput->widget.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.textInput.bg, &red, &green, &blue, &alpha);
     backgroundColor.r = red;
     backgroundColor.g = green;
     backgroundColor.b = blue;
     backgroundColor.a = alpha;
 
-    hexToRGBA(textInput->widget.border.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.textInput.text, &red, &green, &blue, &alpha);
+    textColor.r = red;
+    textColor.g = green;
+    textColor.b = blue;
+    textColor.a = alpha;
+
+    hexToRGBA(app->theme.textInput.border, &red, &green, &blue, &alpha);
     textInputBorderColor.r = red;
     textInputBorderColor.g = green;
     textInputBorderColor.b = blue;

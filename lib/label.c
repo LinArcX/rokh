@@ -3,7 +3,7 @@
 #include "app.h"
 #include "label.h"
 
-extern App* app;
+extern CaveApp* app;
 CaveLabel* label = NULL;
 SDL_Color labelBorderColor = {0};
 
@@ -11,11 +11,11 @@ int labelCreate()
 {
   uint8_t red, green, blue, alpha;
 
-  hexToRGBA(label->text.color, &red, &green, &blue, &alpha);
-  SDL_Color textColor = { red, green, blue, alpha };
-
-  hexToRGBA(label->widget.color, &red, &green, &blue, &alpha);
+  hexToRGBA(app->theme.label.bg, &red, &green, &blue, &alpha);
   SDL_Color backgroundColor = { red, green, blue, alpha };
+
+  hexToRGBA(app->theme.label.text, &red, &green, &blue, &alpha);
+  SDL_Color textColor = { red, green, blue, alpha };
 
   SDL_Surface* surface = TTF_RenderText_Blended(app->widget.font.TTFFont, label->text.text, textColor);
   if (!surface)

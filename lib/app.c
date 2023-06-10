@@ -5,9 +5,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
-// #FF7043 #FF8A65 #66BB6A #A5D6A7 #1E1E1E #262626 #212121 #9E9E9E #8a919c #9c9891 #8a919c #616161 #BDBDBD #DADADA #FAFAFA
-
-App* app;
+CaveApp* app;
 
 int windowPositionChangeHandler()
 {
@@ -30,23 +28,11 @@ int windowKeyboardHandler()
 //------------- Initialization -------------//
 void initApp()
 {
-  app = malloc(sizeof(App));
-
   app->window = NULL;
   app->renderer = NULL;
 
   app->widget.font.TTFFont = NULL;
-  app->widget.font.size = 14;
-  app->widget.font.name = "monaco.ttf"; //CourierPrime.ttf, FantasqueSansMono.ttf
-
-  app->widget.x = 0;
-  app->widget.y = 0;
-  app->widget.width = 800;
-  app->widget.height = 600;
-  app->widget.color = "#969696";
-
   app->isRunnig = true;
-  app->renderLoopDelay = 40;
 
   app->hoverHandler = NULL;
   app->selectionHandler = NULL;
@@ -225,7 +211,7 @@ int render()
     }
 
     uint8_t red, green, blue, alpha;
-    hexToRGBA(app->widget.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.window.bg, &red, &green, &blue, &alpha); //app->widget.color
 
     SDL_SetRenderDrawColor(app->renderer, red, green, blue, alpha);
     SDL_RenderClear(app->renderer);
@@ -268,9 +254,9 @@ void cleanup()
   app = NULL;
 }
 
-int addWidget(App* app, int widgetType, char* UID, void* widget)
+int addWidget(CaveApp* app, int widgetType, char* UID, void* widget)
 {
-  if (app->numWidgets < MAX_WIDGETS)
+  if (app->numWidgets < CAVE_MAX_WIDGETS)
   {
     CaveWidget newWidget;
     if(isWidgetExisted(UID))
@@ -287,6 +273,73 @@ int addWidget(App* app, int widgetType, char* UID, void* widget)
       return EXIT_SUCCESS;
     }
   }
-  SDL_Log("You've added widgets more than MAX_WIDGETS[%d]", MAX_WIDGETS);
+  SDL_Log("You've added widgets more than MAX_WIDGETS[%d]", CAVE_MAX_WIDGETS);
   return EXIT_FAILURE;
+}
+
+// ------------ Colors ------------
+// #1E1E1E #262626 #212121
+// #616161 #9E9E9E #9c9891 #969696 #757575 #616161
+// #FF7043 #FF8A65
+// #66BB6A #A5D6A7
+// #2C2E34 #455A64 #78909C #90A4AE
+// #8a919c #8a919c
+// #BDBDBD #DADADA #FAFAFA
+// --------------------------------
+
+void setTheme(uint8_t type)
+{
+  switch(type)
+  {
+    case THEME_DEFAULT:
+    {
+      strcpy(app->theme.window.bg, "#9E9E9E");
+
+      strcpy(app->theme.label.bg, app->theme.window.bg);
+      strcpy(app->theme.label.text, "#424242");
+      strcpy(app->theme.label.border, "#616161");
+      strcpy(app->theme.label.hover.bg, "#616161");
+      strcpy(app->theme.label.hover.text, "#EEEEEE");
+      strcpy(app->theme.label.hover.border, "#424242");
+
+      strcpy(app->theme.button.bg, "#757575");
+      strcpy(app->theme.button.text, "#E0E0E0");
+      strcpy(app->theme.button.border, "#616161");
+      strcpy(app->theme.button.hover.bg, "#616161");
+      strcpy(app->theme.button.hover.text, "#EEEEEE");
+      strcpy(app->theme.button.hover.border, "#424242");
+
+      strcpy(app->theme.textInput.bg, "#757575");
+      strcpy(app->theme.textInput.text, "#E0E0E0");
+      strcpy(app->theme.textInput.border, "#616161");
+      strcpy(app->theme.textInput.hover.bg, "#616161");
+      strcpy(app->theme.textInput.hover.text, "#EEEEEE");
+      strcpy(app->theme.textInput.hover.border, "#424242");
+    } break;
+    case THEME_GRUVBOX:
+    {
+      strcpy(app->theme.window.bg, "#BCAAA4");
+
+      strcpy(app->theme.label.bg, app->theme.window.bg);
+      strcpy(app->theme.label.text, "#424242");
+      strcpy(app->theme.label.border, "#616161");
+      strcpy(app->theme.label.hover.bg, "#616161");
+      strcpy(app->theme.label.hover.text, "#EEEEEE");
+      strcpy(app->theme.label.hover.border, "#424242");
+
+      strcpy(app->theme.button.bg, "#8D6E63");
+      strcpy(app->theme.button.text, "#E0E0E0");
+      strcpy(app->theme.button.border, "#795548");
+      strcpy(app->theme.button.hover.bg, "#795548");
+      strcpy(app->theme.button.hover.text, "#EEEEEE");
+      strcpy(app->theme.button.hover.border, "#6D4C41");
+
+      strcpy(app->theme.textInput.bg, "#757575");
+      strcpy(app->theme.textInput.text, "#E0E0E0");
+      strcpy(app->theme.textInput.border, "#616161");
+      strcpy(app->theme.textInput.hover.bg, "#616161");
+      strcpy(app->theme.textInput.hover.text, "#EEEEEE");
+      strcpy(app->theme.textInput.hover.border, "#424242");
+    } break;
+  }
 }

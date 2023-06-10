@@ -3,7 +3,10 @@
 #include "btnTest.h"
 #include "txtInputTest.h"
 
+extern CaveApp* app;
+
 int initWidgets()
+
 {
   if(EXIT_FAILURE == lblTestInit())
   {
@@ -22,6 +25,16 @@ int initWidgets()
 
 int main()
 {
+  app = malloc(sizeof(CaveApp));
+  app->widget.x = 0;
+  app->widget.y = 0;
+  app->widget.width = 800;
+  app->widget.height = 600;
+  app->widget.font.size = 12;
+  app->widget.font.name = "monaco.ttf"; // "CourierPrime.ttf", "FantasqueSansMono.ttf"
+  app->renderLoopDelay = 40;
+  setTheme(THEME_GRUVBOX);
+
   if (EXIT_FAILURE == initialize(initWidgets))
   {
     return EXIT_FAILURE;

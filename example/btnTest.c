@@ -22,21 +22,11 @@ int btnTestInit()
   btnTest.widget.height = lblTest.widget.height;
   btnTest.widget.radius = 50;
   btnTest.widget.padding = 6;
-
-  btnTest.text.text = "Search";
   btnTest.widget.hover.isHovered = false;
-
-  btnTest.text.color = "#E0E0E0";
-  btnTest.widget.color = "#757575";
-  btnTest.widget.border.color = "#616161";
-
-  btnTest.text.hover.color = "#EEEEEE";
-  btnTest.widget.hover.color = "#616161";
-  btnTest.widget.border.hover.color = "#424242";
-
   btnTest.widget.border.style = ALL;
   btnTest.widget.border.width = 2;
   btnTest.widget.border.height = 2;
+  btnTest.text.text = "Search";
 
   btnTest.onLeftClick = btnTestOnLeftClick;
   btnTest.onRightClick = btnTestOnRightClick;

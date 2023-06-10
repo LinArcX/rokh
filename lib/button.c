@@ -4,7 +4,7 @@
 #include "button.h"
 #include "util.h"
 
-extern App* app;
+extern CaveApp* app;
 CaveButton* button = NULL;
 
 SDL_Color buttonColor = {0};
@@ -144,19 +144,19 @@ int buttonCreate() {
   uint8_t red, green, blue, alpha;
   if (button->widget.hover.isHovered)
   {
-    hexToRGBA(button->widget.hover.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.button.hover.bg, &red, &green, &blue, &alpha);
     buttonColor.r = red;
     buttonColor.g = green;
     buttonColor.b = blue;
     buttonColor.a = alpha;
 
-    hexToRGBA(button->text.hover.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.button.hover.text, &red, &green, &blue, &alpha);
     buttonTextColor.r = red;
     buttonTextColor.g = green;
     buttonTextColor.b = blue;
     buttonTextColor.a = alpha;
 
-    hexToRGBA(button->widget.border.hover.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.button.hover.border, &red, &green, &blue, &alpha);
     buttonBorderColor.r = red;
     buttonBorderColor.g = green;
     buttonBorderColor.b = blue;
@@ -164,19 +164,19 @@ int buttonCreate() {
   }
   else
   {
-    hexToRGBA(button->widget.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.button.bg, &red, &green, &blue, &alpha);
     buttonColor.r = red;
     buttonColor.g = green;
     buttonColor.b = blue;
     buttonColor.a = alpha;
 
-    hexToRGBA(button->text.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.button.text, &red, &green, &blue, &alpha);
     buttonTextColor.r = red;
     buttonTextColor.g = green;
     buttonTextColor.b = blue;
     buttonTextColor.a = alpha;
 
-    hexToRGBA(button->widget.border.color, &red, &green, &blue, &alpha);
+    hexToRGBA(app->theme.button.border, &red, &green, &blue, &alpha);
     buttonBorderColor.r = red;
     buttonBorderColor.g = green;
     buttonBorderColor.b = blue;
