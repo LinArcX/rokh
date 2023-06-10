@@ -4,19 +4,20 @@
 #include "label.h"
 
 extern App* app;
-Label* label = NULL;
+CaveLabel* label = NULL;
 SDL_Color labelBorderColor = {0};
 
-int labelCreate() {
+int labelCreate()
+{
   uint8_t red, green, blue, alpha;
 
-  hexToRGBA(label->textColor, &red, &green, &blue, &alpha);
+  hexToRGBA(label->text.color, &red, &green, &blue, &alpha);
   SDL_Color textColor = { red, green, blue, alpha };
 
-  hexToRGBA(label->backgroundColor, &red, &green, &blue, &alpha);
+  hexToRGBA(label->widget.color, &red, &green, &blue, &alpha);
   SDL_Color backgroundColor = { red, green, blue, alpha };
 
-  SDL_Surface* surface = TTF_RenderText_Blended(app->font, label->text, textColor);
+  SDL_Surface* surface = TTF_RenderText_Blended(app->widget.font.TTFFont, label->text.text, textColor);
   if (!surface)
   {
     SDL_Log("Failed to create surface: %s", TTF_GetError());
@@ -33,14 +34,19 @@ int labelCreate() {
   }
 
   // background rectangle
-  SDL_Rect backgroundRect = { label->x, label->y, label->width + label->padding, label->height + label->padding };
+  SDL_Rect backgroundRect = {
+    label->widget.x,
+    label->widget.y,
+    label->widget.width + label->widget.padding,
+    label->widget.height + label->widget.padding
+  };
   SDL_SetRenderDrawColor(app->renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
   SDL_RenderFillRect(app->renderer, &backgroundRect);
 
   // text rectangle
   SDL_Rect textRect = {
-    label->x + (label->width - surface->w) / 2 + label->padding / 2,
-    label->y + (label->height - surface->h) / 2 + label->padding / 2,
+    label->widget.x + (label->widget.width - surface->w) / 2 + label->widget.padding / 2,
+    label->widget.y + (label->widget.height - surface->h) / 2 + label->widget.padding / 2,
     surface->w,
     surface->h
   };
@@ -61,10 +67,14 @@ int labelCreateWidget()
   return EXIT_FAILURE;
 }
 
-void labelInit(Label* lbl)
+int labelInit(CaveLabel* lbl)
 {
   label = lbl;
   registerCallBackFunction(&app->widgetCreatorHandler, labelCreateWidget);
 
-  addWidget(app, LABEL, label->UID, &label);
+  if(EXIT_FAILURE == addWidget(app, LABEL, label->widget.UID, &label))
+  {
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }

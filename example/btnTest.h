@@ -3,8 +3,8 @@
 
 #include "../lib/button.h"
 
-extern Button btnTest;
+extern CaveButton btnTest;
 
-void btnTestInit();
+int btnTestInit();
 
 #endif

@@ -2,52 +2,57 @@
 #include "btnTest.h"
 #include <string.h>
 
-TextInput txtInputTest;
+CaveTextInput txtInputTest;
 
 void txtInputTestOnCharAppend()
 {
-  SDL_Log("[%s.OnCharAppend] size: %zu", txtInputTest.UID, strlen(txtInputTest.text));
+  SDL_Log("[%s.OnCharAppend] size: %zu", txtInputTest.widget.UID, strlen(txtInputTest.text.text));
 }
 
 void txtInputTestOnBackSpace()
 {
-  SDL_Log("[%s.OnBackSpace] size: %zu", txtInputTest.UID, strlen(txtInputTest.text));
+  SDL_Log("[%s.OnBackSpace] size: %zu", txtInputTest.widget.UID, strlen(txtInputTest.text.text));
 }
 
 void txtInputTestOnEmpty()
 {
-  SDL_Log("[%s.OnEmpty] size: %zu", txtInputTest.UID, strlen(txtInputTest.text));
+  SDL_Log("[%s.OnEmpty] size: %zu", txtInputTest.widget.UID, strlen(txtInputTest.text.text));
 }
 
-void txtInputTestInit()
+int txtInputTestInit()
 {
-  txtInputTest.UID = "txtInputTest";
-  txtInputTest.x = btnTest.x + btnTest.width + btnTest.padding + 10;
-  txtInputTest.y = btnTest.y;
-  txtInputTest.radius = 1;
-  txtInputTest.padding = 6;
+  txtInputTest.widget.UID = "txtInputTest";
+  txtInputTest.widget.x = btnTest.widget.x + btnTest.widget.width + btnTest.widget.padding + 10;
+  txtInputTest.widget.y = btnTest.widget.y;
+  txtInputTest.widget.width = 200;
+  txtInputTest.widget.height = btnTest.widget.height;
+  txtInputTest.widget.radius = 1;
+  txtInputTest.widget.padding = 6;
+
   txtInputTest.caret.type = HORIZONTAL;
-  txtInputTest.width = 200;
-  txtInputTest.height = btnTest.height;
-  txtInputTest.backgroundColor = "#DADADA"; //#262626
+  txtInputTest.text.text = malloc(1); //memset(txtInputTest.text, 0, 1);
 
-  txtInputTest.text = malloc(1);
-  //memset(txtInputTest.text, 0, 1);
-  txtInputTest.textColor = "#262626"; //#DADADA, #FAFAFA
+  txtInputTest.widget.hover.isHovered = false;
 
-  txtInputTest.hover.isHovered = false;
-  txtInputTest.hover.textColor = "#212121";
-  txtInputTest.hover.borderColor = "#212121";
-  txtInputTest.hover.backgroundColor = "#A5D6A7"; //#FF7043, #FF8A65, #66BB6A, #1E1E1E
+  txtInputTest.text.color = "#E0E0E0";
+  txtInputTest.widget.color = "#757575";
+  txtInputTest.widget.border.color = "#616161";
 
-  txtInputTest.border.style = ALL;
-  txtInputTest.border.color = "#616161";
-  txtInputTest.border.width = 2;
-  txtInputTest.border.height = 2;
+  txtInputTest.text.hover.color = "#EEEEEE";
+  txtInputTest.widget.hover.color = "#616161";
+  txtInputTest.widget.border.hover.color = "#424242";
+
+  txtInputTest.widget.border.style = ALL;
+  txtInputTest.widget.border.width = 2;
+  txtInputTest.widget.border.height = 2;
 
   txtInputTest.onEmpty = txtInputTestOnEmpty;
   txtInputTest.onBackSpace = txtInputTestOnBackSpace;
   txtInputTest.onCharAppend = txtInputTestOnCharAppend;
 
-  textInputInit(&txtInputTest);
+  if(EXIT_FAILURE == textInputInit(&txtInputTest))
+  {
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }

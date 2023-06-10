@@ -1,19 +1,20 @@
 #include "app.h"
-#include "util.h"
 
 #include <time.h>
 #include <stdlib.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
+// #FF7043 #FF8A65 #66BB6A #A5D6A7 #1E1E1E #262626 #212121 #9E9E9E #8a919c #9c9891 #8a919c #616161 #BDBDBD #DADADA #FAFAFA
+
 App* app;
 
 int windowPositionChangeHandler()
 {
-  app->x = app->lastCycleWindowEvent.data1;
-  app->y = app->lastCycleWindowEvent.data2;
+  app->widget.x = app->lastCycleWindowEvent.data1;
+  app->widget.y = app->lastCycleWindowEvent.data2;
 
-  SDL_Log("Window moved to (%d, %d)\n", app->x, app->y);
+  SDL_Log("Window moved to (%d, %d)\n", app->widget.x, app->widget.y);
   return EXIT_SUCCESS;
 }
 
@@ -34,15 +35,15 @@ void initApp()
   app->window = NULL;
   app->renderer = NULL;
 
-  app->font = NULL;
-  app->fontSize = 14;
-  app->fontName = "monaco.ttf"; //CourierPrime.ttf, FantasqueSansMono.ttf
+  app->widget.font.TTFFont = NULL;
+  app->widget.font.size = 14;
+  app->widget.font.name = "monaco.ttf"; //CourierPrime.ttf, FantasqueSansMono.ttf
 
-  app->x = 0;
-  app->y = 0;
-  app->width = 800;
-  app->height = 600;
-  app->backgroundColor = "#757575";// #262626
+  app->widget.x = 0;
+  app->widget.y = 0;
+  app->widget.width = 800;
+  app->widget.height = 600;
+  app->widget.color = "#969696";
 
   app->isRunnig = true;
   app->renderLoopDelay = 40;
@@ -69,15 +70,17 @@ void initApp()
 
 int initFont()
 {
-  if (TTF_Init() < 0) {
-      printf("SDL_ttf initialization failed. SDL_ttf Error: %s\n", TTF_GetError());
-      return EXIT_FAILURE;
+  if (TTF_Init() < 0)
+  {
+    printf("SDL_ttf initialization failed. SDL_ttf Error: %s\n", TTF_GetError());
+    return EXIT_FAILURE;
   }
 
-  app->font = TTF_OpenFont(app->fontName, app->fontSize);
-  if (app->font == NULL) {
-      printf("Font loading failed. SDL_ttf Error: %s\n", TTF_GetError());
-      return EXIT_FAILURE;
+  app->widget.font.TTFFont = TTF_OpenFont(app->widget.font.name, app->widget.font.size);
+  if (app->widget.font.TTFFont == NULL)
+  {
+    printf("Font loading failed. SDL_ttf Error: %s\n", TTF_GetError());
+    return EXIT_FAILURE;
   }
 
   // Enable text anti-aliasing
@@ -92,21 +95,29 @@ int initFont()
 
 int initSDL()
 {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-      printf("SDL initialization failed. SDL Error: %s\n", SDL_GetError());
-      return EXIT_FAILURE;
+  if (SDL_Init(SDL_INIT_VIDEO) < 0)
+  {
+    printf("SDL initialization failed. SDL Error: %s\n", SDL_GetError());
+    return EXIT_FAILURE;
   }
 
-  app->window= SDL_CreateWindow("Galaxy of Nodes", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, app->width, app->height, SDL_WINDOW_SHOWN);
-  if (app->window == NULL) {
-      printf("Window creation failed. SDL Error: %s\n", SDL_GetError());
-      return EXIT_FAILURE;
+  app->window= SDL_CreateWindow("Cave Sample",
+    SDL_WINDOWPOS_UNDEFINED,
+    SDL_WINDOWPOS_UNDEFINED,
+    app->widget.width,
+    app->widget.height,
+    SDL_WINDOW_SHOWN);
+  if (app->window == NULL)
+  {
+    printf("Window creation failed. SDL Error: %s\n", SDL_GetError());
+    return EXIT_FAILURE;
   }
 
   app->renderer= SDL_CreateRenderer(app->window, -1, SDL_RENDERER_ACCELERATED);
-  if (app->renderer == NULL) {
-      printf("Renderer creation failed. SDL Error: %s\n", SDL_GetError());
-      return EXIT_FAILURE;
+  if (app->renderer == NULL)
+  {
+    printf("Renderer creation failed. SDL Error: %s\n", SDL_GetError());
+    return EXIT_FAILURE;
   }
 
   if(EXIT_FAILURE == initFont())
@@ -116,7 +127,7 @@ int initSDL()
   return EXIT_SUCCESS;
 }
 
-int initialize(void (*initWidget)(void))
+int initialize(int (*initWidget)(void))
 {
   initApp();
 
@@ -125,7 +136,10 @@ int initialize(void (*initWidget)(void))
     return EXIT_FAILURE;
   }
 
-  initWidget();
+  if( EXIT_FAILURE == initWidget())
+  {
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 
@@ -211,7 +225,7 @@ int render()
     }
 
     uint8_t red, green, blue, alpha;
-    hexToRGBA(app->backgroundColor, &red, &green, &blue, &alpha);
+    hexToRGBA(app->widget.color, &red, &green, &blue, &alpha);
 
     SDL_SetRenderDrawColor(app->renderer, red, green, blue, alpha);
     SDL_RenderClear(app->renderer);
@@ -230,7 +244,7 @@ int render()
 //------------- CleanUp -------------//
 void cleanup()
 {
-  TTF_CloseFont(app->font);
+  TTF_CloseFont(app->widget.font.TTFFont);
   TTF_Quit();
 
   SDL_DestroyRenderer(app->renderer);
@@ -254,40 +268,25 @@ void cleanup()
   app = NULL;
 }
 
-
 int addWidget(App* app, int widgetType, char* UID, void* widget)
 {
-  if (app->numWidgets < MAX_WIDGETS) {
-    Widget newWidget;
-    newWidget.type = widgetType;
-    newWidget.UID = UID;
-    newWidget.widgetPtr = widget;
-    app->widgets[app->numWidgets++] = newWidget;
-    return EXIT_SUCCESS;
-  }
-  return EXIT_FAILURE;
-}
-
-void printWidgets(App* app)
-{
-  printf("Number of widgets: %d\n", app->numWidgets);
-  for (int i = 0; i < app->numWidgets; i++)
+  if (app->numWidgets < MAX_WIDGETS)
   {
-    Widget* widget = &(app->widgets[i]);
-    printf("Type: %d, UID: %s\n", i, widget->UID);
-    //switch (widget->type)
-    //{
-    //  case BUTTON:
-    //    break;
-    //  case LABEL:
-    //    printf("Type: %d: Label\n", i);
-    //    break;
-    //  case TEXTINPUT:
-    //    printf("Type: %d: TextInput\n", i);
-    //    break;
-    //  default:
-    //    printf("Type: %d: Unknown\n", i);
-    //    break;
-    //}
+    CaveWidget newWidget;
+    if(isWidgetExisted(UID))
+    {
+      SDL_Log("Widget:[%s] already exists! ", UID);
+      return EXIT_FAILURE;
+    }
+    else
+    {
+      newWidget.type = widgetType;
+      newWidget.UID = UID;
+      newWidget.widgetPtr = widget;
+      app->widgets[app->numWidgets++] = newWidget;
+      return EXIT_SUCCESS;
+    }
   }
+  SDL_Log("You've added widgets more than MAX_WIDGETS[%d]", MAX_WIDGETS);
+  return EXIT_FAILURE;
 }

@@ -2,18 +2,22 @@
 
 #include "app.h"
 #include "button.h"
+#include "util.h"
 
 extern App* app;
-Button* button = NULL;
+CaveButton* button = NULL;
+
+SDL_Color buttonColor = {0};
+SDL_Color buttonTextColor = {0};
 SDL_Color buttonBorderColor = {0};
 
 //------------- Event Handlers -------------//
 int buttonLeftClickHandler()
 {
-  if (app->lastCycleMouseButtonEvent.x >= button->x
-      && app->lastCycleMouseButtonEvent.x <= button->x + button->width + button->padding
-      && app->lastCycleMouseButtonEvent.y >= button->y
-      && app->lastCycleMouseButtonEvent.y <= button->y + button->height + button->padding)
+  if (app->lastCycleMouseButtonEvent.x >= button->widget.x
+      && app->lastCycleMouseButtonEvent.x <= button->widget.x + button->widget.width + button->widget.padding
+      && app->lastCycleMouseButtonEvent.y >= button->widget.y
+      && app->lastCycleMouseButtonEvent.y <= button->widget.y + button->widget.height + button->widget.padding)
   {
     if(NULL != button->onLeftClick)
     {
@@ -25,10 +29,10 @@ int buttonLeftClickHandler()
 
 int buttonRightClickHandler()
 {
-  if (app->lastCycleMouseButtonEvent.x >= button->x
-      && app->lastCycleMouseButtonEvent.x <= button->x + button->width + button->padding
-      && app->lastCycleMouseButtonEvent.y >= button->y
-      && app->lastCycleMouseButtonEvent.y <= button->y + button->height + button->padding)
+  if (app->lastCycleMouseButtonEvent.x >= button->widget.x
+      && app->lastCycleMouseButtonEvent.x <= button->widget.x + button->widget.width + button->widget.padding
+      && app->lastCycleMouseButtonEvent.y >= button->widget.y
+      && app->lastCycleMouseButtonEvent.y <= button->widget.y + button->widget.height + button->widget.padding)
   {
     if(NULL != button->onRightClick)
     {
@@ -40,10 +44,10 @@ int buttonRightClickHandler()
 
 int buttonHoverHandler()
 {
-  if (app->lastCycleMouseMotionEvent.x >= button->x
-      && app->lastCycleMouseMotionEvent.x <= button->x + button->width + button->padding
-      && app->lastCycleMouseMotionEvent.y >= button->y
-      && app->lastCycleMouseMotionEvent.y <= button->y + button->height + button->padding)
+  if (app->lastCycleMouseMotionEvent.x >= button->widget.x
+      && app->lastCycleMouseMotionEvent.x <= button->widget.x + button->widget.width + button->widget.padding
+      && app->lastCycleMouseMotionEvent.y >= button->widget.y
+      && app->lastCycleMouseMotionEvent.y <= button->widget.y + button->widget.height + button->widget.padding)
   {
     // for external logics
     if(NULL != button->onHovered)
@@ -52,11 +56,11 @@ int buttonHoverHandler()
     }
 
     // for internal logic
-    button->hover.isHovered = true;
+    button->widget.hover.isHovered = true;
   }
   else
   {
-    button->hover.isHovered = false;
+    button->widget.hover.isHovered = false;
   }
   return EXIT_SUCCESS;
 }
@@ -65,19 +69,19 @@ int buttonHoverHandler()
 void ButtonCreateLeftBorder()
 {
   SDL_Rect rect = {0};
-  if(button->border.style == ALL)
+  if(button->widget.border.style == ALL)
   {
-   rect.x = button->x - button->border.width;
-   rect.y = button->y - button->border.height;
-   rect.w = button->border.width;
-   rect.h = button->height + button->padding + (2 * button->border.height);
+   rect.x = button->widget.x - button->widget.border.width;
+   rect.y = button->widget.y - button->widget.border.height;
+   rect.w = button->widget.border.width;
+   rect.h = button->widget.height + button->widget.padding + (2 * button->widget.border.height);
   }
   else
   {
-   rect.x = button->x - button->border.width;
-   rect.y = button->y;
-   rect.w = button->border.width;
-   rect.h = button->height + button->padding;
+   rect.x = button->widget.x - button->widget.border.width;
+   rect.y = button->widget.y;
+   rect.w = button->widget.border.width;
+   rect.h = button->widget.height + button->widget.padding;
   }
   SDL_SetRenderDrawColor(app->renderer, buttonBorderColor.r, buttonBorderColor.g, buttonBorderColor.b, buttonBorderColor.a);
   SDL_RenderFillRect(app->renderer, &rect);
@@ -86,19 +90,19 @@ void ButtonCreateLeftBorder()
 void ButtonCreateRightBorder()
 {
   SDL_Rect rect = {0};
-  if(button->border.style == ALL)
+  if(button->widget.border.style == ALL)
   {
-    rect.x = button->x + button->width + button->padding;
-    rect.y = button->y - button->border.height;
-    rect.w = button->border.width;
-    rect.h = button->height + button->padding + (2 * button->border.height);
+    rect.x = button->widget.x + button->widget.width + button->widget.padding;
+    rect.y = button->widget.y - button->widget.border.height;
+    rect.w = button->widget.border.width;
+    rect.h = button->widget.height + button->widget.padding + (2 * button->widget.border.height);
   }
   else
   {
-    rect.x = button->x + button->width + button->padding;
-    rect.y = button->y;
-    rect.w = button->border.width;
-    rect.h = button->height + button->padding;
+    rect.x = button->widget.x + button->widget.width + button->widget.padding;
+    rect.y = button->widget.y;
+    rect.w = button->widget.border.width;
+    rect.h = button->widget.height + button->widget.padding;
   }
   SDL_SetRenderDrawColor(app->renderer, buttonBorderColor.r, buttonBorderColor.g, buttonBorderColor.b, buttonBorderColor.a);
   SDL_RenderFillRect(app->renderer, &rect);
@@ -107,10 +111,10 @@ void ButtonCreateRightBorder()
 void ButtonCreateTopBorder()
 {
   SDL_Rect rect = {
-    button->x,
-    button->y - button->border.height,
-    button->width + button->padding,
-    button->border.height
+    button->widget.x,
+    button->widget.y - button->widget.border.height,
+    button->widget.width + button->widget.padding,
+    button->widget.border.height
   };
   SDL_SetRenderDrawColor(app->renderer, buttonBorderColor.r, buttonBorderColor.g, buttonBorderColor.b, buttonBorderColor.a);
   SDL_RenderFillRect(app->renderer, &rect);
@@ -119,10 +123,10 @@ void ButtonCreateTopBorder()
 void ButtonCreateBottomBorder()
 {
   SDL_Rect rect = {
-    button->x ,
-    button->y + button->height + button->padding,
-    button->width + button->padding,
-    button->border.height
+    button->widget.x ,
+    button->widget.y + button->widget.height + button->widget.padding,
+    button->widget.width + button->widget.padding,
+    button->widget.border.height
   };
   SDL_SetRenderDrawColor(app->renderer, buttonBorderColor.r, buttonBorderColor.g, buttonBorderColor.b, buttonBorderColor.a);
   SDL_RenderFillRect(app->renderer, &rect);
@@ -138,36 +142,48 @@ void CreateAllBorder()
 
 int buttonCreate() {
   uint8_t red, green, blue, alpha;
-
-  hexToRGBA(button->textColor, &red, &green, &blue, &alpha);
-  SDL_Color textColor = { red, green, blue, alpha };
-
-  hexToRGBA(button->backgroundColor, &red, &green, &blue, &alpha);
-  SDL_Color backgroundColor = { red, green, blue, alpha };
-
-  hexToRGBA(button->border.color, &red, &green, &blue, &alpha);
-  buttonBorderColor.r = red;
-  buttonBorderColor.g = green;
-  buttonBorderColor.b = blue;
-  buttonBorderColor.a = alpha;
-
-  if (button->hover.isHovered)
+  if (button->widget.hover.isHovered)
   {
-    hexToRGBA(button->hover.textColor, &red, &green, &blue, &alpha);
-    textColor.r = red;
-    textColor.g = green;
-    textColor.b = blue;
-    textColor.a = alpha;
+    hexToRGBA(button->widget.hover.color, &red, &green, &blue, &alpha);
+    buttonColor.r = red;
+    buttonColor.g = green;
+    buttonColor.b = blue;
+    buttonColor.a = alpha;
 
-    hexToRGBA(button->hover.backgroundColor, &red, &green, &blue, &alpha);
-    backgroundColor.r = red;
-    backgroundColor.g = green;
-    backgroundColor.b = blue;
-    backgroundColor.a = alpha;
+    hexToRGBA(button->text.hover.color, &red, &green, &blue, &alpha);
+    buttonTextColor.r = red;
+    buttonTextColor.g = green;
+    buttonTextColor.b = blue;
+    buttonTextColor.a = alpha;
+
+    hexToRGBA(button->widget.border.hover.color, &red, &green, &blue, &alpha);
+    buttonBorderColor.r = red;
+    buttonBorderColor.g = green;
+    buttonBorderColor.b = blue;
+    buttonBorderColor.a = alpha;
   }
+  else
+  {
+    hexToRGBA(button->widget.color, &red, &green, &blue, &alpha);
+    buttonColor.r = red;
+    buttonColor.g = green;
+    buttonColor.b = blue;
+    buttonColor.a = alpha;
 
+    hexToRGBA(button->text.color, &red, &green, &blue, &alpha);
+    buttonTextColor.r = red;
+    buttonTextColor.g = green;
+    buttonTextColor.b = blue;
+    buttonTextColor.a = alpha;
+
+    hexToRGBA(button->widget.border.color, &red, &green, &blue, &alpha);
+    buttonBorderColor.r = red;
+    buttonBorderColor.g = green;
+    buttonBorderColor.b = blue;
+    buttonBorderColor.a = alpha;
+  }
   // Create a surface from the rendered text
-  SDL_Surface* surface = TTF_RenderText_Blended(app->font, button->text, textColor);
+  SDL_Surface* surface = TTF_RenderText_Blended(app->widget.font.TTFFont, button->text.text, buttonTextColor);
   if (!surface)
   {
     SDL_Log("Failed to create surface: %s", TTF_GetError());
@@ -185,15 +201,15 @@ int buttonCreate() {
 
   // background rectangle
   SDL_Rect backgroundRect = {
-    button->x,
-    button->y,
-    button->width + button->padding,
-    button->height + button->padding
+    button->widget.x,
+    button->widget.y,
+    button->widget.width + button->widget.padding,
+    button->widget.height + button->widget.padding
   };
-  SDL_SetRenderDrawColor(app->renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+  SDL_SetRenderDrawColor(app->renderer, buttonColor.r, buttonColor.g, buttonColor.b, buttonColor.a);
   SDL_RenderFillRect(app->renderer, &backgroundRect);
 
-  switch(button->border.style)
+  switch(button->widget.border.style)
   {
     case LEFT:
       ButtonCreateLeftBorder();
@@ -217,8 +233,8 @@ int buttonCreate() {
 
   // text rectangle
   SDL_Rect textRect = {
-    button->x + (button->width - surface->w) / 2 + button->padding / 2,
-    button->y + (button->height - surface->h) / 2 + button->padding / 2,
+    button->widget.x + (button->widget.width - surface->w) / 2 + button->widget.padding / 2,
+    button->widget.y + (button->widget.height - surface->h) / 2 + button->widget.padding / 2,
     surface->w,
     surface->h
   };
@@ -238,7 +254,7 @@ int buttonCreateWidget()
   return EXIT_FAILURE;
 }
 
-void buttonInit(Button* btn)
+int buttonInit(CaveButton* btn)
 {
   button = btn;
   registerCallBackFunction(&app->hoverHandler, buttonHoverHandler);
@@ -246,5 +262,9 @@ void buttonInit(Button* btn)
   registerCallBackFunction(&app->rightClickDownHandler, buttonRightClickHandler);
   registerCallBackFunction(&app->widgetCreatorHandler, buttonCreateWidget);
 
-  addWidget(app, BUTTON, button->UID, &button);
+  if(EXIT_FAILURE == addWidget(app, BUTTON, button->widget.UID, &button))
+  {
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }

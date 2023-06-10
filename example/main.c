@@ -3,11 +3,21 @@
 #include "btnTest.h"
 #include "txtInputTest.h"
 
-void initWidgets()
+int initWidgets()
 {
-  lblTestInit();
-  btnTestInit();
-  txtInputTestInit();
+  if(EXIT_FAILURE == lblTestInit())
+  {
+    return EXIT_FAILURE;
+  }
+  if(EXIT_FAILURE == btnTestInit())
+  {
+    return EXIT_FAILURE;
+  }
+  if(EXIT_FAILURE == txtInputTestInit())
+  {
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
 int main()

@@ -4,7 +4,7 @@
 #include "../lib/textInput.h"
 
 // other widgets can access this widget through this declaration.
-extern TextInput txtInputTest;
+extern CaveTextInput txtInputTest;
 
-void txtInputTestInit();
+int txtInputTestInit();
 #endif

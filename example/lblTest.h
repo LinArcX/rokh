@@ -3,8 +3,8 @@
 
 #include "../lib/label.h"
 
-extern Label lblTest;
+extern CaveLabel lblTest;
 
-void lblTestInit();
+int lblTestInit();
 
 #endif
