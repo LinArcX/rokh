@@ -1,6 +1,8 @@
 #include "../lib/app.h"
+
 #include "lblTest.h"
 #include "btnTest.h"
+#include "lstBoxTest.h"
 #include "txtInputTest.h"
 
 extern CaveApp* app;
@@ -20,6 +22,10 @@ int initWidgets()
   {
     return EXIT_FAILURE;
   }
+  if(EXIT_FAILURE == lstBoxTestInit())
+  {
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 
@@ -28,7 +34,7 @@ int main()
   app = malloc(sizeof(CaveApp));
   app->widget.x = 0;
   app->widget.y = 0;
-  app->widget.width = 800;
+  app->widget.width = 1000;
   app->widget.height = 600;
   app->widget.font.size = 12;
   app->widget.font.name = "monaco.ttf"; // "CourierPrime.ttf", "FantasqueSansMono.ttf"

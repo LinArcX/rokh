@@ -1,12 +1,11 @@
 #include "lblTest.h"
-#include "../lib/app.h"
 
 CaveLabel lblTest;
 
 int lblTestInit()
 {
   lblTest.widget.UID = "lblTest";
-  lblTest.widget.x = 20;
+  lblTest.widget.x = 10;
   lblTest.widget.y = 20;
   lblTest.widget.radius = 1;
   lblTest.widget.width = 50;

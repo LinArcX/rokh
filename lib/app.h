@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#include "../lib/util.h"
+#include "util/callback.h"
 #include "widget.h"
 
 #define CAVE_MAX_WIDGETS 10000
@@ -58,6 +58,24 @@ typedef struct
 
     } hover;
   } textInput;
+
+  struct
+  {
+    char bg[8];
+    char items[8];
+    char selected[8];
+    char border[8];
+    char text[8];
+    struct
+    {
+      char bg[8];
+      char items[8];
+      char selected[8];
+      char border[8];
+      char text[8];
+
+    } hover;
+  } listBox;
 
 } CaveTheme;
 

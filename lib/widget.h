@@ -16,6 +16,7 @@ typedef enum
   BUTTON = 0,
   LABEL,
   TEXTINPUT,
+  LISTBOX,
   POPUP,
   SLIDER
 } CaveWidgetType;

@@ -1,4 +1,5 @@
 #include "app.h"
+#include "../lib/util/convertor.h"
 
 #include <time.h>
 #include <stdlib.h>
@@ -322,10 +323,11 @@ void setTheme(uint8_t type)
 
       strcpy(app->theme.label.bg, app->theme.window.bg);
       strcpy(app->theme.label.text, "#424242");
-      strcpy(app->theme.label.border, "#616161");
-      strcpy(app->theme.label.hover.bg, "#616161");
-      strcpy(app->theme.label.hover.text, "#EEEEEE");
-      strcpy(app->theme.label.hover.border, "#424242");
+      strcpy(app->theme.label.border, app->theme.window.bg);
+
+      strcpy(app->theme.label.hover.bg, app->theme.window.bg);
+      strcpy(app->theme.label.hover.text, "#424242");
+      strcpy(app->theme.label.hover.border, app->theme.window.bg);
 
       strcpy(app->theme.button.bg, "#8D6E63");
       strcpy(app->theme.button.text, "#E0E0E0");
@@ -340,6 +342,18 @@ void setTheme(uint8_t type)
       strcpy(app->theme.textInput.hover.bg, "#616161");
       strcpy(app->theme.textInput.hover.text, "#EEEEEE");
       strcpy(app->theme.textInput.hover.border, "#424242");
+
+      strcpy(app->theme.listBox.bg, "#757575");
+      strcpy(app->theme.listBox.text, "#E0E0E0");
+      strcpy(app->theme.listBox.items, "#757575");
+      strcpy(app->theme.listBox.border, "#E0E0E0");
+      strcpy(app->theme.listBox.selected, "#757575");
+
+      strcpy(app->theme.listBox.hover.bg, "#616161");
+      strcpy(app->theme.listBox.hover.text, "#EEEEEE");
+      strcpy(app->theme.listBox.hover.items, "#616161");
+      strcpy(app->theme.listBox.hover.border, "#424242");
+      strcpy(app->theme.listBox.hover.selected, "#EEEEEE");
     } break;
   }
 }

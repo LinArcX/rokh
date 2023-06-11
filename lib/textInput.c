@@ -3,6 +3,7 @@
 
 #include "app.h"
 #include "textInput.h"
+#include "util/convertor.h"
 
 extern CaveApp* app;
 SDL_Rect caretRect = {0};

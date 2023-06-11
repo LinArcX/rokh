@@ -6,12 +6,13 @@
 
 void printWidgets()
 {
-  printf("Number of widgets: %d\n", app->numWidgets);
+  printf("Number of widgets: %d\n\n", app->numWidgets);
   for (int i = 0; i < app->numWidgets; i++)
   {
     CaveWidget* widget = &(app->widgets[i]);
     printf("Type: %s, UID: %s\n", widgetName(widget->type), widget->UID);
   }
+  printf("---------------------\n");
 }
 
 void setActiveWidget(const char* UID)
@@ -48,9 +49,10 @@ const char* widgetName(CaveWidgetType widgetType)
 {
   switch (widgetType)
   {
-    case BUTTON: return "BUTTON";
     case LABEL: return "LABEL";
+    case BUTTON: return "BUTTON";
     case TEXTINPUT: return "TEXTINPUT";
+    case LISTBOX: return "LISTBOX";
     case POPUP: return "POPUP";
     case SLIDER: return "SLIDER";
   }

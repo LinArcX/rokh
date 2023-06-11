@@ -60,7 +60,7 @@ _generateTags() {
 _compile() {
   compiler="cc"
   flags="-lSDL2 -lSDL2_ttf -lm"
-  src="lib/*.c example/*.c"
+  src="lib/util/*.c lib/*.c example/*.c"
 
   echo ">>> Compiling ($mode)"
   $compiler $mode_flags $flags -o $build_dir/$app $src
