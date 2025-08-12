@@ -8,7 +8,6 @@
 extern CaveApp* app;
 
 int initWidgets()
-
 {
   if(EXIT_FAILURE == lblTestInit())
   {
@@ -22,10 +21,10 @@ int initWidgets()
   {
     return EXIT_FAILURE;
   }
-  if(EXIT_FAILURE == lstBoxTestInit())
-  {
-    return EXIT_FAILURE;
-  }
+  //if(EXIT_FAILURE == lstBoxTestInit())
+  //{
+  //  return EXIT_FAILURE;
+  //}
   return EXIT_SUCCESS;
 }
 

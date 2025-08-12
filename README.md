@@ -1,10 +1,4 @@
-<h1 align="center">
-    <img src="assets/cave.jpg" align="center" width="700" height="350"/>
-    <br/>
-    <h4 align="center">Is it hard to make your own GUI? why nobody talks about it anymore?! <a href="https://en.wikipedia.org/wiki/Allegory_of_the_cave">[more]</a></h4>
-</h1>
-
-# Cave
+# rokh
 A gui library based on C, SDL2 and Plato Ideas!
 
 # Prerequisites
@@ -50,28 +44,14 @@ There are two main directories:
   - sample widgets: there are some widgets like __btnTest__, __lblTest__, __txtInputTest__, etc..
     you can see how they are implemented if you need ideas about widget creation.
 
-## How to use Cave in my own project?
+## How to use rokh in my own project?
 1. put **lib/** directory in your project.
 2. start designing your scene by creating different widgets. you should follow some rules:
   2.1. for every widget that you create, you should provide an init() function for it in its header file.(look at `txtInputTest.h`)
   2.2. in the equivalent `.c` file, you should implement that init function.
-    2.2.1. inside this function, you should set the properties of each widget.(most Cave widgets have a structure that you need to initialize)
+    2.2.1. inside this function, you should set the properties of each widget.(most rokh widgets have a structure that you need to initialize)
     2.2.2. you should register callback functions to handle events.(look at `txtInputTest.c`, if you need some ideas)
 3. finally, call your init function in `initWidgets()` that you can find it in **main.c**.
 
-# Why Cave?
-Plato has an allegory called: [Allegory of the cave](https://en.wikipedia.org/wiki/Allegory_of_the_cave). In there, he's talking about people who in their whole life, they watched the projection of the reality
-and they didn't try to believe that maybe reality is something else.
-
-Once some of them escaped their calm life and start exploring, they realize that reality is totally different from their perception. Finally, they came back to the cave, but no one believed them...
-
-I think the same scenario happened in our computer world. No one wants to know about underlying stuff anymore. They think all the **buttons** should come from HTML world or C# window forms!
-They don't even bother themselves to search, explore or even try to make something from scratch.
-
-I created the Cave:
-1. to satisfy my curiosity and make my knowledge deeper in GUI development.
-2. to encourage you that can start exploring also.
-3. and maybe someone uses CaveGui in his/her own project. who knows? :)
-
 ## License
-![License](https://img.shields.io/github/license/LinArcX/cave.svg)
+![License](https://img.shields.io/github/license/LinArcX/rokh.svg)

@@ -1,7 +1,7 @@
 # app
 - [] improve overall font rendering.
 - [] implement a mechanism to get/set active widget on the current window.
-- [] find a way to initialize some properties of widgets by default in cave library itself.
+- [] find a way to initialize some properties of widgets by default in rokh library itself.
 - [] initialize all widget with a default value before letting user create any widget.
 
 # TextInput

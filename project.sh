@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ###########################################################################################
-#                                    Cave
+#                                    Rokh
 ###########################################################################################
 # there's a project.sh in root of the project. before do anything, source it: . project.sh
 #
@@ -34,17 +34,17 @@ build_dir="build/$mode"
 
 mode_flags=""
 if [ "$mode" == "debug" ]; then
-  app="cave"
+  app="rokh"
   mode_flags="-g -O0"
 fi
 
 if [ "$mode" == "release" ]; then
-  app="cave"
+  app="rokh"
   mode_flags="-O3"
 fi
 
 if [ "$mode" == "test" ]; then
-  app="cave_test"
+  app="rokh_test"
 fi
 
 _createBuildDir() {
