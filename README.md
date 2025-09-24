@@ -3,30 +3,18 @@ A gui library based on C, SDL2 and Plato Ideas!
 
 # Prerequisites
 ## libs
+- SDL3-devel
 - SDL2_ttf-devel
-- SDL-devel
 
 ## tools
 - git
+- fzf
 - gcc(or clang)
 - gdb(or seergdb)
-- fzf
 
-# Build/Run/Clean
+# build, run, clean
 ## Linux
-First source **project.sh** file:
-`. project.sh`
-
-And then call `p`(it's a bash function).
-
-Now you can see a list of commands, like:
-- run
-- clean
-- debug
-- generate tags
-- valgrind
-- find strings in the binary
-- list symbols from object files
+./p
 
 # Architecture
 There are two main directories:

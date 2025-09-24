@@ -1,3 +1,11 @@
 tags
 build/*
+report/*
+.cache/*
 garbage/*
+cppcheck/*
+coverage/*
+docs/doxygen/*
+breakpoints.json
+lib/breakpoints.json
+compile_commands.json

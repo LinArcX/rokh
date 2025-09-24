@@ -35,8 +35,8 @@ int main()
   app->widget.y = 0;
   app->widget.width = 1000;
   app->widget.height = 600;
-  app->widget.font.size = 12;
-  app->widget.font.name = "monaco.ttf"; // "CourierPrime.ttf", "FantasqueSansMono.ttf"
+  app->widget.font.size = 14;
+  app->widget.font.name = "SofiaSans-Light.ttf"; // monaco.ttf, "CourierPrime.ttf", "FantasqueSansMono.ttf"
   app->renderLoopDelay = 40;
   setTheme(THEME_GRUVBOX);
 

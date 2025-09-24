@@ -43,7 +43,7 @@ char** generateStringList(int size, char* strings[])
 
   for (int i = 0; i < size; i++)
   {
-    stringList[i] = strdup(strings[i]);
+    stringList[i] = (strings[i]);
     if (stringList[i] == NULL)
     {
       fprintf(stderr, "Failed to allocate memory for string %d\n", i+1);
